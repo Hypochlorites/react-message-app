@@ -548,15 +548,52 @@ video {
   display: flex;
 }
 
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
 .bg-blue-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+}
+
+.bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+.from-neutral-300 {
+  --tw-gradient-from: #d4d4d4 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(212 212 212 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-stone-400 {
+  --tw-gradient-to: #a8a29e var(--tw-gradient-to-position);
 }
 
 .p-2 {
   padding: 0.5rem;
 }
 
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
 .font-bold {
   font-weight: 700;
-} 
+}
+
+/* npx tailwindcss -i ./src/input.css -o ./src/output.css --watch */
