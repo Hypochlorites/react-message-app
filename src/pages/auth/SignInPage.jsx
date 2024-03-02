@@ -1,10 +1,23 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../firebaseConfig';
 
 
 export default function SignInPage() {
 
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault()
+    // add thing for failing to signin
+    signInWithEmailAndPassword(auth, email, password)
+      .then ((userCredential) => {
+        const user = userCredential.user
+        navigate("/chat")
+      })
   }
     
   return (
@@ -20,7 +33,7 @@ export default function SignInPage() {
             name="email"
             autoComplete="email"
             required
-            /* onChange={(e) => { setEmail(e.target.value) }} */>
+            onChange={(e) => { setEmail(e.target.value) }} >
           </input>
         </div>
         <div className="p-2 flex flex-col">
@@ -32,14 +45,12 @@ export default function SignInPage() {
             name="password"
             autoComplete="new-password"
             required
-            /* onChange={(e) => { setPassword(e.target.value) }} */> 
+            onChange={(e) => { setPassword(e.target.value) }} > 
           </input>
         </div>
         <button type="submit" className="border-2 p-2 border-black rounded-md hover:bg-blue-200">Login</button>
       </form>
       <h1> Do not have an account? <Link className="text-blue-600" to="/signup"> Sign Up! </Link></h1>
     </div>
-      
   )
-
 }
