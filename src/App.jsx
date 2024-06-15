@@ -17,13 +17,13 @@ export default function App() {
       <BrowserRouter>
         <div>
           
-          {signedIn && <NavBar />}
+          {signedIn && <NavBar setSignedIn={setSignedIn} />}
           
           <Routes>
-            <Route path ="/" element={<HomePage signedIn={signedIn} setSignedIn={setSignedIn} />} />         
-            <Route path ="/chat" element={<ChatPage />} />    
-            <Route path ="/signup" element={<SignUpPage />} />    
-            <Route path ="/signin" element={<SignInPage />} />   
+            <Route path ="/" element={<HomePage signedIn={signedIn} />} />         
+            <Route path ="/chat" element={<ChatPage/>} />    
+            <Route path ="/signup" element={<SignUpPage/>} />    
+            <Route path ="/signin" element={<SignInPage setSignedIn={setSignedIn}/>} />   
           </Routes>
         </div>
       </BrowserRouter>

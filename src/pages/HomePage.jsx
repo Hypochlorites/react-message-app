@@ -1,6 +1,4 @@
-
-
-export default function HomePage({signedIn, setSignedIn}) {
+export default function HomePage({signedIn}) {
   if (signedIn) {
     return (
       <h1 className="font-bold"> Home </h1>

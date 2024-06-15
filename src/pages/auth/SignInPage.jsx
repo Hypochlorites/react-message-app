@@ -1,29 +1,37 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../.firebaseConfig';
 
 
-export default function SignInPage() {
+export default function SignInPage({setSignedIn}) {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
+  const [error, setError] = useState(null)
+  
   const navigate = useNavigate()
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // add thing for failing to signin
-    signInWithEmailAndPassword(auth, email, password)
-      .then ((userCredential) => {
-        const user = userCredential.user
-        navigate("/chat")
-      })
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+      setSignedIn(true)
+      navigate("/chat")
+    } catch (e) {
+      setError(e.message)
+      console.error("Error signing in: ", e.message)
+    }
   }
+
+  
     
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold underline"> Sign In </h1>
       <form onSubmit={handleSubmit} className="flex flex-col items-center"> 
+        {error && <p className="text-red-600">{error}</p> }
         <div className="p-2 flex flex-col">
           <label htmlFor="email">Email</label>
           <input 
