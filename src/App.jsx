@@ -1,6 +1,7 @@
+//React imports 
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-//Component Imports
+//Component imports
 import NavBar from "./components/NavBar"
 //Page imports
 import HomePage from "./pages/HomePage"
@@ -10,20 +11,21 @@ import SignInPage from "./pages/auth/SignInPage"
 
 
 export default function App() {
-  const [signedIn, setSignedIn] = useState(false)
+  //State Variables 
+  const [user, setUser] = useState(null)
 
+  
+  //HTML
   return (
     <div>
       <BrowserRouter>
         <div>
-          
-          {signedIn && <NavBar setSignedIn={setSignedIn} />}
-          
+          {user && <NavBar user={user} setUser={setUser} />}
           <Routes>
-            <Route path ="/" element={<HomePage signedIn={signedIn} />} />         
-            <Route path ="/chat" element={<ChatPage/>} />    
+            <Route path ="/" element={<HomePage user={user} />} />         
+            <Route path ="/chat" element={<ChatPage user={user}/>} />    
             <Route path ="/signup" element={<SignUpPage/>} />    
-            <Route path ="/signin" element={<SignInPage setSignedIn={setSignedIn}/>} />   
+            <Route path ="/signin" element={<SignInPage setUser={setUser}/>} />   
           </Routes>
         </div>
       </BrowserRouter>

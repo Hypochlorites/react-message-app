@@ -1,15 +1,20 @@
+//React imports 
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+//Firebase imports 
 import { doc, setDoc} from 'firebase/firestore';
 import { auth, db } from '../../../.firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+
 export default function SignUpPage() {
+  //State Variables
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [username, setUsername] = useState("")
   const [error, setError] = useState(null)
   
+  //Functions
   const navigate = useNavigate()  
   
   const handleSubmit = async (e) => {
@@ -21,15 +26,17 @@ export default function SignUpPage() {
         email: user.email,
         username: username
       }
-      const userRef = await setDoc(doc(db, "users", userInfo.id), userInfo)
+      await setDoc(doc(db, "users", userInfo.id), userInfo)
       navigate("/signin")
     } catch (e) {
       setError(e.message)
-      console.error("Error signing up: ", e.message)
+      console.error("Error signing up: ", e)
       // more normal error messages for incorrect information 
     }  
   }
 
+
+  //HTML
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold underline"> Create an Account </h1>

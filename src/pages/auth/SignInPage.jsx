@@ -1,32 +1,35 @@
+//React imports 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+//Firebase imports 
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../.firebaseConfig';
 
 
-export default function SignInPage({setSignedIn}) {
-
+export default function SignInPage({setUser}) {
+  //State Variables
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
   
+  //Functions 
   const navigate = useNavigate()
   
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
-      setSignedIn(true)
+      setUser(userCredential.user)
+      console.log(userCredential.user)
       navigate("/chat")
     } catch (e) {
       setError(e.message)
-      console.error("Error signing in: ", e.message)
+      console.error("Error signing in: ", e)
     }
   }
 
   
-    
+  //HTML  
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold underline"> Sign In </h1>

@@ -1,5 +1,7 @@
-export default function HomePage({signedIn}) {
-  if (signedIn) {
+
+
+export default function HomePage({user}) {
+  if (user) {
     return (
       <h1 className="font-bold"> Home </h1>
       )
