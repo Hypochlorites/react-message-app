@@ -1,9 +1,9 @@
 //React imports 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 //Firebase imports 
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../.firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../../.firebaseConfig'
 
 
 export default function SignInPage({setUser}) {
@@ -20,7 +20,6 @@ export default function SignInPage({setUser}) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       setUser(userCredential.user)
-      console.log(userCredential.user)
       navigate("/chat")
     } catch (e) {
       setError(e.message)

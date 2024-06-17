@@ -1,17 +1,18 @@
 //React imports
 import { Link } from 'react-router-dom'
 //Firebase imports
-import  { signOut } from 'firebase/auth';
-import { auth } from '../../.firebaseConfig';
+import  { signOut } from 'firebase/auth'
+import { auth } from '../../.firebaseConfig'
 
 
-export default function NavBar({user, setUser}) {
+export default function NavBar({setUser}) {
   //Functions
   const signout = async () => {
     try {
       await signOut(auth)
       setUser(null)
     } catch (e) {
+      //Display error to user?
       console.error("Error signing out: ", e)
     }
   }

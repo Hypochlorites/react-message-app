@@ -1,10 +1,8 @@
-
-
 export default function HomePage({user}) {
   if (user) {
     return (
       <h1 className="font-bold"> Home </h1>
-      )
+    )
   } else {
     return (
       <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-slate-300 to-slate-500">
@@ -13,9 +11,5 @@ export default function HomePage({user}) {
         <a href="signin"> Login</a>
       </div>
     )
-  }
-  
-    
-  
-  
+  }  
 }

@@ -20,7 +20,7 @@ export default function App() {
     <div>
       <BrowserRouter>
         <div>
-          {user && <NavBar user={user} setUser={setUser} />}
+          {user && <NavBar setUser={setUser} />}
           <Routes>
             <Route path ="/" element={<HomePage user={user} />} />         
             <Route path ="/chat" element={<ChatPage user={user}/>} />    
@@ -30,12 +30,5 @@ export default function App() {
         </div>
       </BrowserRouter>
     </div>
-
-    
   )
-
-
-
-
-  
 }

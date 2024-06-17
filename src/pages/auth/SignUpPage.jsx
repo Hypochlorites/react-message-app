@@ -1,10 +1,10 @@
 //React imports 
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 //Firebase imports 
-import { doc, setDoc} from 'firebase/firestore';
-import { auth, db } from '../../../.firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc} from 'firebase/firestore'
+import { auth, db } from '../../../.firebaseConfig'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 
 export default function SignUpPage() {
