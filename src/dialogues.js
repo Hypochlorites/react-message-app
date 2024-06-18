@@ -20,7 +20,6 @@ const Dialogues =  [
     'user': 'Drone4',
     'lastMessage': 'Sup',
   },
-
 ]
 
 

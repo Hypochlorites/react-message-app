@@ -1,6 +1,6 @@
 //Component imports 
 import ChatListItem from './ChatListItem'
-//Temporary import
+//Temporary imports
 import Dialogues from '../../dialogues'
 
 
