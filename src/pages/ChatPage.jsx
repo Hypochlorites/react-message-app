@@ -29,15 +29,14 @@ export default function ChatPage({user}) {
 
   //HTML
   return (
-    <div className="flex">
-
-      <ChatList className=""
-        selectedDialogue={selectedDialogue}
-        setSelectedDialogue={setSelectedDialogue}
-      />
-      
-      <div className="basis-full">
-
+    <div className="flex flex-grow">
+      <div className="flex flex-col basis-60">
+        <ChatList 
+          selectedDialogue={selectedDialogue}
+          setSelectedDialogue={setSelectedDialogue}
+        />
+      </div>
+      <div className="basis-full flex flex-col justify-content: space-between">
         <ChatHistory
           user={user}
         />

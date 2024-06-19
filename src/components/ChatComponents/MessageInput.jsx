@@ -21,7 +21,7 @@ export default function MessageInput({ sendMessage }) {
     <div className="bg-gray-200">
       <form onSubmit={handleSubmit} className="p-2 flex">
         <input 
-          className="basis-full rounded-lg pl-2"
+          className="basis-full rounded-lg p-1 pl-2"
           type="text" 
           placeholder="mesage..."
           onChange={(e) => {setToSend(e.target.value)}} 

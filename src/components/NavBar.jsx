@@ -27,12 +27,5 @@ export default function NavBar({setUser}) {
       </ul>
       <button className="p-2" onClick={signout}> Signout </button> 
     </nav>
-  )
-
-
-
-
-
-
-  
+  )  
 }

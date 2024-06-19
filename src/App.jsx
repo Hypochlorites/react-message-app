@@ -17,10 +17,10 @@ export default function App() {
   
   //HTML
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <BrowserRouter>
-        <div>
-          {user && <NavBar setUser={setUser} />}
+        {user && <NavBar setUser={setUser} />}
+        <div className="flex-grow flex flex-col">
           <Routes>
             <Route path ="/" element={<HomePage user={user} />} />         
             <Route path ="/chat" element={<ChatPage user={user}/>} />    
