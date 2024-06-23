@@ -1,13 +1,14 @@
-import Messages from '../../messages'
 //Component imports 
 import Message from './Message'
+//Temporary imports
+import Messages from '../../messages'
 
 
 export default function ChatHistory(user) {
   //HTML
   return (
-    <div className="overflow-y-auto basis-full bg-gray-100">
-      <ul className="">
+    <div className="basis-full bg-gray-100">
+      <ul>
         {Messages.map((message, id) => (
           <li key={id}>
             <Message 
