@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../.firebaseConfig'
 
 
-export default function SignInPage({setUser}) {
+export default function SignInPage() {
   //State Variables
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -18,8 +18,7 @@ export default function SignInPage({setUser}) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      setUser(userCredential.user)
+      await signInWithEmailAndPassword(auth, email, password)
       navigate("/chat")
     } catch (e) {
       setError(e.message)

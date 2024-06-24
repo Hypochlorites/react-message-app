@@ -5,12 +5,11 @@ import  { signOut } from 'firebase/auth'
 import { auth } from '../../.firebaseConfig'
 
 
-export default function NavBar({setUser}) {
+export default function NavBar() {
   //Functions
-  const signout = async () => {
+  const signout = () => {
     try {
-      await signOut(auth)
-      setUser(null)
+      signOut(auth)
     } catch (e) {
       //Display error to user?
       console.error("Error signing out: ", e)

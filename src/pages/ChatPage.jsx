@@ -1,6 +1,9 @@
 //React imports
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+//Firebase imports 
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../.firebaseConfig'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -8,7 +11,7 @@ import ChatHistory from '../components/ChatComponents/ChatHistory'
 import UserList from '../components/ChatComponents/UserList'
 
 
-export default function ChatPage({user}) {
+export default function ChatPage({currentUser, setCurrentUser}) {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(true)
@@ -26,10 +29,15 @@ export default function ChatPage({user}) {
 
   //useEffects
   useEffect(() => {
-    if (!user) {
-      navigate("/signin")
-    }
-  }, [user])
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user)
+      } else {
+        setCurrentUser(null)
+        navigate('/signin')
+      }
+    })
+  }, [currentUser])
   
 
   //HTML
@@ -43,14 +51,14 @@ export default function ChatPage({user}) {
           />
         ) : (
           <UserList 
-            currentUser={user}
+            currentUser={currentUser}
             createDialogue={createDialogue}
           />
         )} 
       </div>
       <div className="basis-full flex flex-col justify-content: space-between">
         <ChatHistory
-          user={user}
+          currentUser={currentUser}
         />
         <MessageInput 
           sendMessage={sendMessage}  

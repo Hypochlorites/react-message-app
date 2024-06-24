@@ -4,7 +4,7 @@ import Message from './Message'
 import Messages from '../../messages'
 
 
-export default function ChatHistory(user) {
+export default function ChatHistory({currentUser}) {
   //HTML
   return (
     <div className="basis-full bg-gray-100">
@@ -13,7 +13,7 @@ export default function ChatHistory(user) {
           <li key={id}>
             <Message 
               message={message}
-              isIncoming={message.from !== user.user.uid}
+              isIncoming={message.from !== currentUser.uid}
             />
           </li>
         ))}

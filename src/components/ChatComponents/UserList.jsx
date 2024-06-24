@@ -30,19 +30,23 @@ export default function UserList({currentUser, createDialogue})  {
   
   //HTML
   return (
-    <div>
+    <div className="basis-full bg-gray-400">
       { error ? (
         <p className="text-red-600">{error}</p>
       ) : (
-        <div className="basis-full bg-gray-400">
-          <ul className="flex flex-col divide-y">
-            {users.map((user, id) => (
-              <li className="text-lg font-bold" key={id} onClick={() => {createDialogue(user)}}>
-                {user.username}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <div>
+          { users.length === 0 ? (
+            <p1> Loading... </p1>
+          ) : (
+            <ul className="flex flex-col divide-y">
+              {users.map((user, id) => (
+                <li className="text-lg font-bold p-1" key={id} onClick={() => {createDialogue(user)}}>
+                  {user.username}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>  
       )}
     </div>
   )

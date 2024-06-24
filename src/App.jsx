@@ -1,6 +1,6 @@
 //React imports 
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 //Component imports
 import NavBar from "./components/NavBar"
 //Page imports
@@ -12,20 +12,20 @@ import SignInPage from "./pages/auth/SignInPage"
 
 export default function App() {
   //State Variables 
-  const [user, setUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
 
-  
+
   //HTML
   return (
     <div className="flex flex-col min-h-screen">
       <BrowserRouter>
-        {user && <NavBar setUser={setUser} />}
+        {currentUser && <NavBar/>}
         <div className="flex-grow flex flex-col">
           <Routes>
-            <Route path ="/" element={<HomePage user={user} />} />         
-            <Route path ="/chat" element={<ChatPage user={user}/>} />    
+            <Route path ="/" element={<HomePage currentUser={currentUser} />} />         
+            <Route path ="/chat" element={<ChatPage currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />    
             <Route path ="/signup" element={<SignUpPage/>} />    
-            <Route path ="/signin" element={<SignInPage setUser={setUser}/>} />   
+            <Route path ="/signin" element={<SignInPage/>} />   
           </Routes>
         </div>
       </BrowserRouter>
