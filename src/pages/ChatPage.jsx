@@ -14,7 +14,7 @@ import UserList from '../components/ChatComponents/UserList'
 export default function ChatPage({currentUser, setCurrentUser}) {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
-  const [startNewChat, setStartNewChat] = useState(true)
+  const [startNewChat, setStartNewChat] = useState(false)
   
   //Functions
   const navigate = useNavigate()
@@ -29,7 +29,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
 
   //useEffects
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user)
       } else {
@@ -37,33 +37,46 @@ export default function ChatPage({currentUser, setCurrentUser}) {
         navigate('/signin')
       }
     })
-  }, [currentUser])
+    return () => unsubscribe()
+  }, [])
   
 
   //HTML
-  return (
-    <div className="flex flex-grow">
-      <div className="flex flex-col basis-60">
-        {!startNewChat ? (
-          <ChatList 
-            selectedDialogue={selectedDialogue}
-            setSelectedDialogue={setSelectedDialogue}
-          />
-        ) : (
-          <UserList 
+  if (currentUser) {
+    return (
+      <div className="flex flex-grow">
+        <div className="flex flex-col basis-60">
+          <button 
+            className="bg-gray-500 font-bold" 
+            onClick={() => {setStartNewChat(!startNewChat)}} >
+            {startNewChat ? "-" : "+"} 
+          </button>
+          {!startNewChat ? (
+            <ChatList 
+              selectedDialogue={selectedDialogue}
+              setSelectedDialogue={setSelectedDialogue}
+            />
+          ) : (
+            <UserList 
+              currentUser={currentUser}
+              createDialogue={createDialogue}
+            />
+          )} 
+        </div>
+        <div className="basis-full flex flex-col justify-content: space-between">
+          <ChatHistory
             currentUser={currentUser}
-            createDialogue={createDialogue}
           />
-        )} 
-      </div>
-      <div className="basis-full flex flex-col justify-content: space-between">
-        <ChatHistory
-          currentUser={currentUser}
-        />
-        <MessageInput 
-          sendMessage={sendMessage}  
-        />
-      </div>
-    </div> 
-  )
+          <MessageInput 
+            sendMessage={sendMessage}  
+          />
+        </div>
+      </div> 
+    )
+  } else {
+    return (
+      <p> Loading... </p>
+    )
+  }
+  
 }

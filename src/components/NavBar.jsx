@@ -19,7 +19,7 @@ export default function NavBar() {
 
   //HTML
   return (
-    <nav className="flex bg-blue-200 justify-between">
+    <nav className="flex bg-blue-600 justify-between">
       <ul className="flex">
         <li className="p-2"> <Link to="/">Home</Link> </li>
         <li className="p-2"> <Link to="/chat">Chat</Link> </li>
