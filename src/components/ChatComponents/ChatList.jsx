@@ -1,24 +1,28 @@
 //Component imports 
 import ChatListItem from './ChatListItem'
-//Temporary imports
-import Dialogues from '../../dialogues'
 
 
-export default function ChatList({selectedDialogue, setSelectedDialogue}) {
-  //HTML
+export default function ChatList({selectedDialogue, setSelectedDialogue, chats}) {
+  //HTML 
   return (
     <div className="basis-full bg-gray-400">
-      <ul className="flex flex-col divide-y">
-        {Dialogues.map((dialogue, id) => (
-          <li key={id} onClick={() => {setSelectedDialogue(id)}}> 
-            <ChatListItem 
-              username={dialogue['user']}
-              LastMessage={dialogue['lastMessage']}
-              selected={selectedDialogue === id}
-            />
-          </li>
-        ))}
-      </ul>
+      <div>
+        { chats === null ? (
+          <p> Loading... </p>
+        ) : (
+          <ul className="flex flex-col divide-y">
+            {chats.map((chat, id) => (
+              <li key={id} onClick={() => {setSelectedDialogue(chat.dialogue_id)}}> 
+                <ChatListItem 
+                  username={chat.otherUser}
+                  LastMessage={chat.lastMessage}
+                  selected={selectedDialogue === chat.dialogue_id}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }

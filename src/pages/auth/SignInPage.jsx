@@ -22,7 +22,7 @@ export default function SignInPage() {
       navigate("/chat")
     } catch (e) {
       setError(e.message)
-      console.error("Error signing in: ", e)
+      console.error("Error signing in:", e)
     }
   }
 

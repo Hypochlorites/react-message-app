@@ -9,19 +9,18 @@ export default function UserList({currentUser, createDialogue})  {
   //State Variables
   const [users, setUsers] = useState([])
   const [error, setError] = useState(null)
+
   
-  //useEffects
+  //useEffects, should probably move to ChatPage 
   useEffect(() => {
     const getUsers = async () => {
       try {
         const data = await getDocs(collection(db, "users")) 
-        const users = data.docs.map(doc => ({
-          ...doc.data()
-        })).filter(user => user.id !== currentUser.uid)
+        const users = data.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.id)
         setUsers(users)
       } catch (e) {
         setError(e.message)
-        console.error("Error getting UserList: ", e)
+        console.error("Error getting UserList:", e)
       }
     }
     getUsers()
@@ -40,7 +39,7 @@ export default function UserList({currentUser, createDialogue})  {
           ) : (
             <ul className="flex flex-col divide-y">
               {users.map((user, id) => (
-                <li className="text-lg font-bold p-1" key={id} onClick={() => {createDialogue(user)}}>
+                <li className="text-lg font-bold p-1" key={id} onClick={() => {createDialogue(user.id)}}>
                   {user.username}
                 </li>
               ))}

@@ -13,7 +13,7 @@ export default function ChatHistory({currentUser}) {
           <li key={id}>
             <Message 
               message={message}
-              isIncoming={message.from !== currentUser.uid}
+              isIncoming={message.from !== currentUser.id}
             />
           </li>
         ))}

@@ -30,7 +30,7 @@ export default function SignUpPage() {
       navigate("/signin")
     } catch (e) {
       setError(e.message)
-      console.error("Error signing up: ", e)
+      console.error("Error signing up:", e)
       // more normal error messages for incorrect information 
     }  
   }
