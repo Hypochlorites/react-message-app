@@ -1,6 +1,6 @@
 //React imports 
-import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 //Component imports
 import NavBar from "./components/NavBar"
 //Page imports

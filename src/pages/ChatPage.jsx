@@ -17,7 +17,6 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
-  const [chats, setChats] = useState([])
   const [dialogues, setDialogues] = useState([])
   const [error, setError] = useState(null)
 
@@ -134,8 +133,10 @@ export default function ChatPage({currentUser, setCurrentUser}) {
           </button>
           {!startNewChat ? (
             <ChatList 
+              currentUser={currentUser}
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
+              getUserData={getUserData}
             />
           ) : (
             <UserList 
@@ -160,5 +161,4 @@ export default function ChatPage({currentUser, setCurrentUser}) {
       <p> Loading... </p>
     )
   }
-  
 }

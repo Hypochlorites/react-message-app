@@ -34,7 +34,7 @@ export default function UserList({currentUser, initChat})  {
       ) : (
         <div>
           { users.length === 0 ? (
-            <p> Loading... </p>
+            <p className="p-1"> Loading... </p>
           ) : (
             <ul className="flex flex-col divide-y">
               {users.map((user, id) => (
