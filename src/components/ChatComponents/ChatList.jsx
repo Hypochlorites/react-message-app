@@ -2,7 +2,7 @@
 import ChatListItem from './ChatListItem'
 
 
-export default function ChatList({selectedDialogue, setSelectedDialogue, chats}) {
+export default function ChatList({selectedDialogue, setSelectedDialogue}) {
   //HTML 
   return (
     <div className="basis-full bg-gray-400">

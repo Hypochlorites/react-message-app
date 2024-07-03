@@ -5,18 +5,17 @@ import { db } from '../../../.firebaseConfig'
 import { getDocs, collection } from 'firebase/firestore' 
 
 
-export default function UserList({currentUser, createDialogue})  {
+export default function UserList({currentUser, initChat})  {
   //State Variables
   const [users, setUsers] = useState([])
   const [error, setError] = useState(null)
 
-  
-  //useEffects, should probably move to ChatPage 
+  //useEffects  
   useEffect(() => {
     const getUsers = async () => {
       try {
         const data = await getDocs(collection(db, "users")) 
-        const users = data.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.id)
+        const users = data.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.uid)
         setUsers(users)
       } catch (e) {
         setError(e.message)
@@ -39,7 +38,7 @@ export default function UserList({currentUser, createDialogue})  {
           ) : (
             <ul className="flex flex-col divide-y">
               {users.map((user, id) => (
-                <li className="text-lg font-bold p-1" key={id} onClick={() => {createDialogue(user.id)}}>
+                <li className="text-lg font-bold p-1" key={id} onClick={() => {initChat(user.id)}}>
                   {user.username}
                 </li>
               ))}

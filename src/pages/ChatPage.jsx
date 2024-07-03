@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../.firebaseConfig'
-import { collection, doc, addDoc, getDocs, setDoc, query, where } from 'firebase/firestore'
+import { collection, doc, addDoc, getDoc, getDocs, setDoc, query, where } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -17,8 +17,8 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
-  const [chats, setChats] = useState(null)
-  const [dialogues, setDialogues] = useState(null)
+  const [chats, setChats] = useState([])
+  const [dialogues, setDialogues] = useState([])
   const [error, setError] = useState(null)
 
   //Functions
@@ -28,12 +28,39 @@ export default function ChatPage({currentUser, setCurrentUser}) {
     console.log(message)
   }
 
+  const getUserData = async (user_id) => {
+    try {
+      const userRef = doc(db, "users", user_id)
+      const userSnap = await getDoc(userRef)
+      const userObj = userSnap.data()
+      return {userRef, userObj}
+    } catch (e) {
+      setError(e.message)
+      console.error("Error getting user data:", e)
+    }
+  }
+  
+  const createDialogue = async (otherUser_id) => {
+    try {
+      const newDialogue = doc(collection(db, "dialogues"))
+      await setDoc(newDialogue, {
+        user1: currentUser.uid,
+        user2: otherUser_id,
+        id: newDialogue.id 
+      }) 
+      return(newDialogue.id)
+    } catch (e) {
+      setError(e.message)
+      console.error("Error creating dialogue:", e)
+    }
+  }
+
   const createChat = async (user, dialogue_id, otherUser) => {
     try {
       const newChat = collection(user, "chats")
       await addDoc(newChat, {
         dialogue_id: dialogue_id,
-        otherUser: otherUser,
+        otherUser: otherUser.username,
         lastMessage: ""
       })
     } catch (e) {
@@ -42,33 +69,21 @@ export default function ChatPage({currentUser, setCurrentUser}) {
     }
   }
   
-  const createDialogue = async (otherUser_id) => {
-    try {
-      const otherUser = doc(db, "users", otherUser_id)
-      const newDialogue = doc(collection(db, "dialogues"))
-      await setDoc(newDialogue, {
-        user1: currentUser.id,
-        user2: otherUser.id,
-        id: newDialogue.id 
-      })
-      createChat(currentUser, newDialogue.id, otherUser)
-      createChat(otherUser, newDialogue.id, currentUser)
-    } catch (e) {
-      console.log(e)
-      setError(e.message)
-      console.error("Error creating dialogue:", e)
-    }
-    
+  const initChat = async (otherUser_id) => {
+    const otherUserData = await getUserData(otherUser_id)
+    const currentUserData = await getUserData(currentUser.uid)
+    const dialogue_id = await createDialogue(otherUser_id)
+    await createChat(currentUserData.userRef, dialogue_id, otherUserData.userObj)
+    await createChat(otherUserData.userRef, dialogue_id, otherUserData.userObj)
+    setSelectedDialogue(dialogue_id)
+    setStartNewChat(false)
   }
-
-
-
+  
   //useEffects
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const userRef = doc(db, "users", user.uid)
-        setCurrentUser(userRef)
+        setCurrentUser(user)
       } else {
         setCurrentUser(null)
         navigate('/signin')
@@ -80,7 +95,8 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   // useEffect(() => {
   //   const getChats = async () => {
   //     try {
-  //       const data = await getDocs(collection(currentUser, "chats"))
+  //       const currentUserData = await getUserData(currentUser.uid)
+  //       const data = await getDocs(collection(currentUserData.userRef, "chats"))
   //       const chats = data.docs.map(doc => ({...doc.data()}))
   //       setChats(chats)    
   //     } catch (e) {
@@ -100,7 +116,9 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   //     }
   //   }
   //   getChats()
-  //   getDialogues()
+  //   if (chats.length>0) {
+  //     getDialogues()
+  //   }
   // }, [])
 
   
@@ -118,12 +136,11 @@ export default function ChatPage({currentUser, setCurrentUser}) {
             <ChatList 
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
-              chats={chats}
             />
           ) : (
             <UserList 
               currentUser={currentUser}
-              createDialogue={createDialogue}
+              initChat={initChat}
             />
           )} 
         </div>
