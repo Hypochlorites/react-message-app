@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../.firebaseConfig'
-import { collection, doc, addDoc, getDoc, getDocs, setDoc, query, where } from 'firebase/firestore'
+import { collection, doc, addDoc, getDoc, getDocs, setDoc, query, where, updateDoc } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -17,15 +17,10 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
-  const [dialogues, setDialogues] = useState([])
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null)  
 
   //Functions
   const navigate = useNavigate()
-
-  const sendMessage = (message) => {
-    console.log(message)
-  }
 
   const getUserData = async (user_id) => {
     try {
@@ -45,7 +40,8 @@ export default function ChatPage({currentUser, setCurrentUser}) {
       await setDoc(newDialogue, {
         user1: currentUser.uid,
         user2: otherUser_id,
-        id: newDialogue.id 
+        id: newDialogue.id,
+        lastMessage: ""
       }) 
       return(newDialogue.id)
     } catch (e) {
@@ -60,7 +56,6 @@ export default function ChatPage({currentUser, setCurrentUser}) {
       await addDoc(newChat, {
         dialogue_id: dialogue_id,
         otherUser: otherUser.username,
-        lastMessage: ""
       })
     } catch (e) {
       setError(e.message)
@@ -78,6 +73,24 @@ export default function ChatPage({currentUser, setCurrentUser}) {
     setStartNewChat(false)
   }
   
+  const sendMessage = async (toSend) => {
+    try {
+      const dialogueRef = doc(db, "dialogues", selectedDialogue)
+      const newMessage = collection(dialogueRef, "messages")
+      await addDoc(newMessage, {
+        from: currentUser.uid,
+        message: toSend,
+        timeStamp: Date.now() 
+      })
+      await updateDoc(dialogueRef, {
+        lastMessage: toSend
+      })
+    } catch (e) {
+      setError(e.message)
+      console.error("Error sending message:", e)
+    }
+  }
+  
   //useEffects
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -90,35 +103,6 @@ export default function ChatPage({currentUser, setCurrentUser}) {
     })
     return () => unsubscribe()
   }, [])
-
-  // useEffect(() => {
-  //   const getChats = async () => {
-  //     try {
-  //       const currentUserData = await getUserData(currentUser.uid)
-  //       const data = await getDocs(collection(currentUserData.userRef, "chats"))
-  //       const chats = data.docs.map(doc => ({...doc.data()}))
-  //       setChats(chats)    
-  //     } catch (e) {
-  //       setError(e.message)
-  //       console.error("Error getting chats:", e)
-  //     }
-  //   }
-  //   const getDialogues = async () => {
-  //     try {
-  //       const q = query(collection(db, "dialogues"), where('id', 'in', chats.map(chat => (chat.dialogue_id))))
-  //       const data = await getDocs(q)
-  //       const dialogues = data.docs.map(doc => ({...doc.data()}))
-  //       setDialogues(dialogues)
-  //     } catch (e) {
-  //       setError(e.message)
-  //       console.error("Error getting dialogues:", e)
-  //     }
-  //   }
-  //   getChats()
-  //   if (chats.length>0) {
-  //     getDialogues()
-  //   }
-  // }, [])
 
   
   //HTML
@@ -149,10 +133,9 @@ export default function ChatPage({currentUser, setCurrentUser}) {
           {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
           <ChatHistory
             currentUser={currentUser}
+            selectedDialogue={selectedDialogue}
           />
-          <MessageInput 
-            sendMessage={sendMessage}  
-          />
+          {selectedDialogue && <MessageInput sendMessage={sendMessage}/> }
         </div>
       </div> 
     )

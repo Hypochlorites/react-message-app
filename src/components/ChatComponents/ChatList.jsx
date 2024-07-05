@@ -10,7 +10,7 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
   //State Variables
   const [chats, setChats] = useState(null)
   const [error, setError] = useState(null)
-
+  
   //useEffects
   useEffect(() => {
     const getChats = async () => {
@@ -44,7 +44,7 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
                   <li key={id} onClick={() => {setSelectedDialogue(chat.dialogue_id)}}> 
                     <ChatListItem 
                       username={chat.otherUser}
-                      LastMessage={chat.lastMessage}
+                      lastMessage={.lastMessage}
                       selected={selectedDialogue === chat.dialogue_id}
                     />
                   </li>
@@ -53,7 +53,6 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
             )}
           </div>
         )}
-        
       </div>
     </div>
   )
