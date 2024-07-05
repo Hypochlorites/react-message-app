@@ -5,7 +5,7 @@ import { db } from '../../../.firebaseConfig'
 import { getDocs, collection } from 'firebase/firestore' 
 
 
-export default function UserList({currentUser, initChat})  {
+export default function UserList({currentUser, createDialogue})  {
   //State Variables
   const [users, setUsers] = useState([])
   const [error, setError] = useState(null)
@@ -14,8 +14,8 @@ export default function UserList({currentUser, initChat})  {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const data = await getDocs(collection(db, "users")) 
-        const users = data.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.uid)
+        const userSnaps = await getDocs(collection(db, "users")) 
+        const users = userSnaps.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.uid)
         setUsers(users)
       } catch (e) {
         setError(e.message)
@@ -38,7 +38,7 @@ export default function UserList({currentUser, initChat})  {
           ) : (
             <ul className="flex flex-col divide-y">
               {users.map((user, id) => (
-                <li className="text-lg font-bold p-1" key={id} onClick={() => {initChat(user.id)}}>
+                <li className="text-lg font-bold p-1" key={id} onClick={() => {createDialogue(user.id)}}>
                   {user.username}
                 </li>
               ))}

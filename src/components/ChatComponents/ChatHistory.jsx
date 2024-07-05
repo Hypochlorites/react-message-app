@@ -7,9 +7,8 @@ import { collection, doc, getDocs } from 'firebase/firestore'
 import Message from './Message'
 
 
-export default function ChatHistory({currentUser, selectedDialogue}) {
+export default function ChatHistory({currentUser, selectedDialogue, messages, setMessages}) {
   //State Variables 
-  const [messages, setMessages] = useState(null)
   const [error, setError] = useState(null)
   
   //useEffects
@@ -17,8 +16,8 @@ export default function ChatHistory({currentUser, selectedDialogue}) {
     const getMessages = async () => {
       try {
         const dialogueRef = doc(db, "dialogues", selectedDialogue)
-        const data = await getDocs(collection(dialogueRef, "messages"))
-        const messages = data.docs.map(doc => ({...doc.data()}))
+        const messageSnaps = await getDocs(collection(dialogueRef, "messages"))
+        const messages = messageSnaps.docs.map(doc => ({...doc.data()}))
         setMessages(messages)
       } catch (e) {
         setError(e.message)
@@ -56,7 +55,6 @@ export default function ChatHistory({currentUser, selectedDialogue}) {
             </ul> 
           )}
         </div>
-        
       )}
     </div>
   )

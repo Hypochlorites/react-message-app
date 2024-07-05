@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../.firebaseConfig'
-import { collection, doc, addDoc, getDoc, getDocs, setDoc, query, where, updateDoc } from 'firebase/firestore'
+import { collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -17,22 +17,11 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
+  const [messages, setMessages] = useState(null)
   const [error, setError] = useState(null)  
 
   //Functions
   const navigate = useNavigate()
-
-  const getUserData = async (user_id) => {
-    try {
-      const userRef = doc(db, "users", user_id)
-      const userSnap = await getDoc(userRef)
-      const userObj = userSnap.data()
-      return {userRef, userObj}
-    } catch (e) {
-      setError(e.message)
-      console.error("Error getting user data:", e)
-    }
-  }
   
   const createDialogue = async (otherUser_id) => {
     try {
@@ -43,34 +32,11 @@ export default function ChatPage({currentUser, setCurrentUser}) {
         id: newDialogue.id,
         lastMessage: ""
       }) 
-      return(newDialogue.id)
+      setStartNewChat(false)
     } catch (e) {
       setError(e.message)
       console.error("Error creating dialogue:", e)
     }
-  }
-
-  const createChat = async (user, dialogue_id, otherUser) => {
-    try {
-      const newChat = collection(user, "chats")
-      await addDoc(newChat, {
-        dialogue_id: dialogue_id,
-        otherUser: otherUser.username,
-      })
-    } catch (e) {
-      setError(e.message)
-      console.error("Error creating chat:", e)
-    }
-  }
-  
-  const initChat = async (otherUser_id) => {
-    const otherUserData = await getUserData(otherUser_id)
-    const currentUserData = await getUserData(currentUser.uid)
-    const dialogue_id = await createDialogue(otherUser_id)
-    await createChat(currentUserData.userRef, dialogue_id, otherUserData.userObj)
-    await createChat(otherUserData.userRef, dialogue_id, otherUserData.userObj)
-    setSelectedDialogue(dialogue_id)
-    setStartNewChat(false)
   }
   
   const sendMessage = async (toSend) => {
@@ -120,12 +86,11 @@ export default function ChatPage({currentUser, setCurrentUser}) {
               currentUser={currentUser}
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
-              getUserData={getUserData}
             />
           ) : (
             <UserList 
               currentUser={currentUser}
-              initChat={initChat}
+              createDialogue={createDialogue}
             />
           )} 
         </div>
@@ -134,6 +99,8 @@ export default function ChatPage({currentUser, setCurrentUser}) {
           <ChatHistory
             currentUser={currentUser}
             selectedDialogue={selectedDialogue}
+            messages={messages}
+            setMessages={setMessages}
           />
           {selectedDialogue && <MessageInput sendMessage={sendMessage}/> }
         </div>

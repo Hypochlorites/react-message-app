@@ -1,30 +1,66 @@
 //React imports
 import { useState, useEffect } from 'react'
 //Firebase imports
-import { collection, getDocs } from 'firebase/firestore'
+import { db } from '../../../.firebaseConfig'
+import { collection, doc, addDoc, getDoc, getDocs, setDoc, query, where, updateDoc, or, and } from 'firebase/firestore'
 //Component imports 
 import ChatListItem from './ChatListItem'
 
 
-export default function ChatList({currentUser, selectedDialogue, setSelectedDialogue, getUserData}) {
+export default function ChatList({currentUser, selectedDialogue, setSelectedDialogue}) {
   //State Variables
-  const [chats, setChats] = useState(null)
+  const [dialogues, setDialogues] = useState(null)
   const [error, setError] = useState(null)
+  const [usernames, setUsernames] = useState({})
+
+  //Functions
+  const getOtherUsername = async (dialogue) => {
+    try {
+      const otherUser_id = (dialogue.user1 === currentUser.uid) ? dialogue.user2 : dialogue.user1
+      const otherUserRef = doc(db, "users", otherUser_id)
+      const otherUserSnap = await getDoc(otherUserRef)
+      const otherUserObj = otherUserSnap.data()
+      return otherUserObj.username
+    } catch (e) {
+      setError(e.message)
+      console.error("Error getting other username:", e)
+    }
+  }
+  
+  const getDialogues = async () => {
+    try {
+      const dialoguesRef = collection(db, "dialogues")
+      const q = query(dialoguesRef, and(where("user1", "==", currentUser.uid), or(where("user2", "==", currentUser.uid))))
+      const dialogueSnaps = await getDocs(dialoguesRef)
+      const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
+      console.log(dialogues)
+      setDialogues(dialogues)
+    } catch (e) {
+      setError(e.message)
+      console.error("Error getting dialogues:", e)
+    }
+  }
+  
+  const getUsernames = async () => {
+    try {
+      const usernames = {}
+      await Promise.all(dialogues.map(async (dialogue) => {
+        usernames[dialogue.id] = getOtherUsername(dialogue)
+      }))
+      setUsernames(usernames)
+    } catch (e) {
+      setError(e.message)
+      console.error("Error getting usernames:")
+    }
+  }
   
   //useEffects
   useEffect(() => {
-    const getChats = async () => {
-      try {
-        const currentUserData = await getUserData(currentUser.uid)
-        const data = await getDocs(collection(currentUserData.userRef, "chats"))
-        const chats = data.docs.map(doc => ({...doc.data()}))
-        setChats(chats)
-      } catch (e) {
-        setError(e.message)
-        console.error("Error getting chats:", e)
-      }
+    const loadData = async () => {
+      await getDialogues()
+      await getUsernames()
     }
-    getChats()
+    loadData()
   }, [])
 
   
@@ -36,16 +72,16 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
           <p className="text-red-600 p-1">{error}</p>
         ) : (
           <div>
-            { chats === null ? (
+            { dialogues === null ? (
               <p className="p-1"> Loading... </p>
             ) : (
               <ul className="flex flex-col divide-y">
-                {chats.map((chat, id) => (
-                  <li key={id} onClick={() => {setSelectedDialogue(chat.dialogue_id)}}> 
+                {dialogues.map((dialogue, id) => (
+                  <li key={id} onClick={() => {setSelectedDialogue(dialogue.id)}}> 
                     <ChatListItem 
-                      username={chat.otherUser}
-                      lastMessage={.lastMessage}
-                      selected={selectedDialogue === chat.dialogue_id}
+                      username={usernames[dialogue.id]}
+                      lastMessage={dialogue.id}
+                      selected={selectedDialogue === dialogue.id}
                     />
                   </li>
                 ))}
