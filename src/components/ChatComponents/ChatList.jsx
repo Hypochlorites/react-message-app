@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 //Firebase imports
 import { db } from '../../../.firebaseConfig'
-import { collection, doc, addDoc, getDoc, getDocs, setDoc, query, where, updateDoc, or, and } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, where, or } from 'firebase/firestore'
 //Component imports 
 import ChatListItem from './ChatListItem'
 
@@ -26,28 +26,32 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
       console.error("Error getting other username:", e)
     }
   }
-  
+
   const getDialogues = async () => {
     try {
       const dialoguesRef = collection(db, "dialogues")
-      const q = query(dialoguesRef, and(where("user1", "==", currentUser.uid), or(where("user2", "==", currentUser.uid))))
-      const dialogueSnaps = await getDocs(dialoguesRef)
+      const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
+      const dialogueSnaps = await getDocs(q)
       const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
-      console.log(dialogues)
-      setDialogues(dialogues)
+      return dialogues
     } catch (e) {
       setError(e.message)
       console.error("Error getting dialogues:", e)
     }
   }
-  
-  const getUsernames = async () => {
+
+  const getUsernames = async (dialogues) => {
     try {
-      const usernames = {}
-      await Promise.all(dialogues.map(async (dialogue) => {
-        usernames[dialogue.id] = getOtherUsername(dialogue)
-      }))
-      setUsernames(usernames)
+      const usernamePromises = dialogues.map(async (dialogue) => {
+        const username =  await getOtherUsername(dialogue)
+        return {id: dialogue.id, username}
+      })
+      const usernameResponses = await Promise.all(usernamePromises)
+      const usernames = usernameResponses.reduce((acc, {id, username}) => {
+        acc[id] = username
+        return acc
+      }, {})        
+      return usernames
     } catch (e) {
       setError(e.message)
       console.error("Error getting usernames:")
@@ -57,8 +61,10 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
   //useEffects
   useEffect(() => {
     const loadData = async () => {
-      await getDialogues()
-      await getUsernames()
+      const dialogues = await getDialogues()
+      const usernames = await getUsernames(dialogues)
+      setDialogues(dialogues)
+      setUsernames(usernames)
     }
     loadData()
   }, [])
@@ -79,8 +85,8 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
                 {dialogues.map((dialogue, id) => (
                   <li key={id} onClick={() => {setSelectedDialogue(dialogue.id)}}> 
                     <ChatListItem 
-                      username={usernames[dialogue.id]}
-                      lastMessage={dialogue.id}
+                      username={usernames[dialogue.id]} 
+                      lastMessage={dialogue.lastMessage}
                       selected={selectedDialogue === dialogue.id}
                     />
                   </li>
