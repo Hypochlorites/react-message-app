@@ -18,7 +18,8 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
         const dialogueRef = doc(db, "dialogues", selectedDialogue)
         const messageSnaps = await getDocs(collection(dialogueRef, "messages"))
         const messages = messageSnaps.docs.map(doc => ({...doc.data()}))
-        setMessages(messages)
+        const sortedMessages = messages.sort((a, b) => a.timeStamp - b.timeStamp)
+        setMessages(sortedMessages)
       } catch (e) {
         setError(e.message)
         console.error("Error getting messages:", e)
@@ -30,7 +31,7 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
       setMessages([])
     }
   }, [selectedDialogue])
-  
+
   
   //HTML
   return (
@@ -46,9 +47,8 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
               {messages.map((message, id) => (
                 <li key={id}>
                   <Message 
-                    message={message.message}
+                    message={message}
                     isIncoming={message.from !== currentUser.uid}
-                    timeStamp ={message.timeStamp}
                   />
                 </li>
               ))}

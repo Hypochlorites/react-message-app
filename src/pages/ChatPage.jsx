@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../.firebaseConfig'
-import { collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
+import { collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc, Timestamp } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -43,14 +43,16 @@ export default function ChatPage({currentUser, setCurrentUser}) {
     try {
       const dialogueRef = doc(db, "dialogues", selectedDialogue)
       const newMessage = collection(dialogueRef, "messages")
-      await addDoc(newMessage, {
+      const messageData = {
         from: currentUser.uid,
         message: toSend,
-        timeStamp: Date.now() 
-      })
+        timeStamp: Timestamp.fromDate(new Date()) 
+      }
+      await addDoc(newMessage, messageData)
       await updateDoc(dialogueRef, {
         lastMessage: toSend
       })
+      setMessages([...messages, messageData])
     } catch (e) {
       setError(e.message)
       console.error("Error sending message:", e)
@@ -86,6 +88,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
               currentUser={currentUser}
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
+              messages={messages}
             />
           ) : (
             <UserList 

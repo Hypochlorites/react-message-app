@@ -7,7 +7,7 @@ import { collection, doc, getDoc, getDocs, query, where, or } from 'firebase/fir
 import ChatListItem from './ChatListItem'
 
 
-export default function ChatList({currentUser, selectedDialogue, setSelectedDialogue}) {
+export default function ChatList({currentUser, selectedDialogue, setSelectedDialogue, messages}) {
   //State Variables
   const [dialogues, setDialogues] = useState(null)
   const [error, setError] = useState(null)
@@ -67,7 +67,7 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
       setUsernames(usernames)
     }
     loadData()
-  }, [])
+  }, [messages])
 
   
   //HTML 
