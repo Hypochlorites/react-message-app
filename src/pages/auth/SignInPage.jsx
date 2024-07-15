@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 //Firebase imports 
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword, AuthErrorCodes  } from 'firebase/auth'
 import { auth } from '../../../.firebaseConfig'
 
 
@@ -21,6 +21,10 @@ export default function SignInPage() {
       await signInWithEmailAndPassword(auth, email, password)
       navigate("/chat")
     } catch (e) {
+      if (e.code === "auth/invalid-credential") {
+        setError("Incorrect email or password.")
+        return 
+      }
       setError(e.message)
       console.error("Error signing in:", e)
     }

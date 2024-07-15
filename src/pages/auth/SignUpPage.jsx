@@ -2,7 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 //Firebase imports 
-import { doc, setDoc} from 'firebase/firestore'
+import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore'
 import { auth, db } from '../../../.firebaseConfig'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 
@@ -16,10 +16,26 @@ export default function SignUpPage() {
   
   //Functions
   const navigate = useNavigate()  
+
+  const validateUsername = async () => {
+    try {
+      const q = query(collection(db, "users"), where("username", "==", username))
+      const querySnap = await getDocs(q)
+      return (querySnap.size===0)
+    } catch (e) {
+      setError(e.message)
+      console.error("Error validating username:", e)
+    }
+  }
   
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      const isUsernameValid = await validateUsername()
+      if (!isUsernameValid) {
+        setError("Username is already in use.")
+        return 
+      }
       const {user} = await createUserWithEmailAndPassword(auth, email, password)
       const userInfo = {
         id: user.uid,
@@ -29,9 +45,20 @@ export default function SignUpPage() {
       await setDoc(doc(db, "users", userInfo.id), userInfo)
       navigate("/signin")
     } catch (e) {
-      setError(e.message)
-      console.error("Error signing up:", e)
-      // more normal error messages for incorrect information 
+      switch (e.code) {
+        case AuthErrorCodes.EMAIL_EXISTS:
+          setError("Email address is already in use.")
+          break
+        case AuthErrorCodes.WEAK_PASSWORD:
+          setError("Password must be at least 6 characters.")
+          break
+        case AuthErrorCodes.INVALID_EMAIL:
+          setError("Invalid email.")
+          break
+        default:
+          setError(e.message)
+          console.error("error singing up:", e)
+      } 
     }  
   }
 

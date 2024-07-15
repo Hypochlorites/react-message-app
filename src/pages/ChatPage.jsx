@@ -33,6 +33,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
         lastMessage: ""
       }) 
       setStartNewChat(false)
+      setSelectedDialogue(newDialogue.id)
     } catch (e) {
       setError(e.message)
       console.error("Error creating dialogue:", e)
