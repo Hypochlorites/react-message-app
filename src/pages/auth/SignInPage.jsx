@@ -15,7 +15,7 @@ export default function SignInPage() {
   //Functions 
   const navigate = useNavigate()
   
-  const handleSubmit = async (e) => {
+  const signIn = async (e) => {
     e.preventDefault()
     try {
       await signInWithEmailAndPassword(auth, email, password)
@@ -25,8 +25,8 @@ export default function SignInPage() {
         setError("Incorrect email or password.")
         return 
       }
-      setError(e.message)
-      console.error("Error signing in:", e)
+      setError(`Error signing in: ${e}`)
+      console.error("Error in signIn:", e, e.message)
     }
   }
 
@@ -35,8 +35,8 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold underline"> Sign In </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col items-center"> 
-        {error && <p className="text-red-600">{error}</p> }
+      <form onSubmit={signIn} className="flex flex-col items-center"> 
+        {error && <p className="text-red-600 p-1">{error}</p> }
         <div className="p-2 flex flex-col">
           <label htmlFor="email">Email</label>
           <input 

@@ -21,8 +21,8 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
         const sortedMessages = messages.sort((a, b) => a.timeStamp - b.timeStamp)
         setMessages(sortedMessages)
       } catch (e) {
-        setError(e.message)
-        console.error("Error getting messages:", e)
+        setError(`Error getting messages: ${e}`)
+        console.error("Error in getMessages:", e, e.message)
       }
     }
     if (selectedDialogue) {
@@ -37,7 +37,7 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
   return (
     <div className="basis-full bg-gray-100">
       { error ? (
-        <p className="text-red-600">{error}</p>
+        <p className="text-red-600 p-1">{error}</p>
       ) : (
         <div>
           {messages === null ? (

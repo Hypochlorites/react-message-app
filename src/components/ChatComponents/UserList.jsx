@@ -18,8 +18,8 @@ export default function UserList({currentUser, createDialogue})  {
         const users = userSnaps.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.uid)
         setUsers(users)
       } catch (e) {
-        setError(e.message)
-        console.error("Error getting UserList:", e)
+        setError(`Error getting userlist: ${e}`)
+        console.error("Error in getUsers:", e, e.message)
       }
     }
     getUsers()
@@ -30,7 +30,7 @@ export default function UserList({currentUser, createDialogue})  {
   return (
     <div className="basis-full bg-gray-400">
       { error ? (
-        <p className="text-red-600">{error}</p>
+        <p className="text-red-600 p-1">{error}</p>
       ) : (
         <div>
           { users.length === 0 ? (

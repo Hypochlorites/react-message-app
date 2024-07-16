@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../.firebaseConfig'
-import { collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc, Timestamp } from 'firebase/firestore'
+import { collection, doc, addDoc, setDoc, updateDoc, Timestamp } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -35,8 +35,8 @@ export default function ChatPage({currentUser, setCurrentUser}) {
       setStartNewChat(false)
       setSelectedDialogue(newDialogue.id)
     } catch (e) {
-      setError(e.message)
-      console.error("Error creating dialogue:", e)
+      setError(`Error creating dialogue: ${e}`)
+      console.error("Error in createDialogue", e, e.message)
     }
   }
   
@@ -55,22 +55,33 @@ export default function ChatPage({currentUser, setCurrentUser}) {
       })
       setMessages([...messages, messageData])
     } catch (e) {
-      setError(e.message)
-      console.error("Error sending message:", e)
+      setError(`Error sending message: ${e}`)
+      console.error("Error in sendMessage:", e, e.message)
     }
   }
   
   //useEffects
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user)
-      } else {
-        setCurrentUser(null)
-        navigate('/signin')
-      }
+      try {
+        if (user) {
+          setCurrentUser(user)
+        } else {
+          setCurrentUser(null)
+          navigate('/signin')
+        }
+      } catch (e) {
+        setError(`Error checking user auth: ${e}`)
+        console.error("Error in onAuthStateChanged:", e, e.message)
+      } 
     })
-    return () => unsubscribe()
+    return () => {
+      try {
+        unsubscribe()
+      } catch (e) {
+        console.error("Error unsubscribing from onAuthStateChanged:", e, e.message)
+      }
+      }
   }, [])
 
   

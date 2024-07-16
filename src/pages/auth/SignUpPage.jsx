@@ -28,7 +28,7 @@ export default function SignUpPage() {
     }
   }
   
-  const handleSubmit = async (e) => {
+  const createAccount = async (e) => {
     e.preventDefault()
     try {
       const isUsernameValid = await validateUsername()
@@ -56,8 +56,8 @@ export default function SignUpPage() {
           setError("Invalid email.")
           break
         default:
-          setError(e.message)
-          console.error("error singing up:", e)
+          setError(`Error creating account: ${e}`)
+          console.error("Error in createAccount:", e, e.message)
       } 
     }  
   }
@@ -67,7 +67,7 @@ export default function SignUpPage() {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold underline"> Create an Account </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col items-center"> 
+      <form onSubmit={createAccount} className="flex flex-col items-center"> 
         {error && <p className="text-red-600">{error}</p> }
         <div className="p-2 flex flex-col">
           <label htmlFor="email">Email</label>

@@ -1,18 +1,22 @@
 //React imports
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 //Firebase imports
 import  { signOut } from 'firebase/auth'
 import { auth } from '../../.firebaseConfig'
 
 
 export default function NavBar() {
+  //State Variables
+  const [error, setError] = useState(null)
+  
   //Functions
   const signout = () => {
     try {
       signOut(auth)
     } catch (e) {
-      //Display error to user?
-      console.error("Error signing out: ", e)
+      setError(`Error signing out: ${e}`)
+      console.error("Error in signout:", e, e.message)
     }
   }
   
@@ -24,6 +28,7 @@ export default function NavBar() {
         <li className="p-2"> <Link to="/">Home</Link> </li>
         <li className="p-2"> <Link to="/chat">Chat</Link> </li>
       </ul>
+      {error && <p className="text-red-600 p-1">{error}</p> }
       <button className="p-2" onClick={signout}> Signout </button> 
     </nav>
   )  

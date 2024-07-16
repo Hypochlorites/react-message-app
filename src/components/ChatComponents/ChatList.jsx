@@ -22,8 +22,8 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
       const otherUserObj = otherUserSnap.data()
       return otherUserObj.username
     } catch (e) {
-      setError(e.message)
-      console.error("Error getting other username:", e)
+      setError(`Error getting other username: ${e}`)
+      console.error("Error in getOtherUsername:", e, e.message)
     }
   }
 
@@ -35,8 +35,8 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
       const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
       return dialogues
     } catch (e) {
-      setError(e.message)
-      console.error("Error getting dialogues:", e)
+      setError(`Error getting dialogues: ${e}`)
+      console.error("Error in getDialogues:", e, e.message)
     }
   }
 
@@ -53,8 +53,8 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
       }, {})        
       return usernames
     } catch (e) {
-      setError(e.message)
-      console.error("Error getting usernames:")
+      setError(`Error getting usernames: ${e}`)
+      console.error("Error in getUsernames:", e, e.message)
     }
   }
   
