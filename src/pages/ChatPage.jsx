@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { db } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../.firebaseConfig'
-import { collection, doc, addDoc, setDoc, updateDoc, Timestamp } from 'firebase/firestore'
+import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -18,6 +18,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
   const [messages, setMessages] = useState(null)
+  const [dialogues, setDialogues] = useState(null)
   const [error, setError] = useState(null)  
 
   //Functions
@@ -81,9 +82,27 @@ export default function ChatPage({currentUser, setCurrentUser}) {
       } catch (e) {
         console.error("Error unsubscribing from onAuthStateChanged:", e, e.message)
       }
-      }
+    }
   }, [])
 
+  useEffect(() => {
+    const getDialogues = async () => {
+      try {
+        const dialoguesRef = collection(db, "dialogues")
+        const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
+        const dialogueSnaps = await getDocs(q)
+        const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
+        setDialogues(dialogues)
+      } catch (e) {
+        setError(`Error getting dialogues: ${e}`)
+        console.error("Error in getDialogues:", e, e.message)
+      }
+    }
+    if (currentUser) {
+      getDialogues()
+    }
+  }, [messages, currentUser])
+  
   
   //HTML
   if (currentUser) {
@@ -100,7 +119,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
               currentUser={currentUser}
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
-              messages={messages}
+              dialogues={dialogues}
             />
           ) : (
             <UserList 
