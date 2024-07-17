@@ -105,7 +105,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   
   
   //HTML
-  if (currentUser) {
+  if (currentUser && dialogues) {
     return (
       <div className="flex flex-grow">
         <div className="flex flex-col basis-60">
@@ -123,7 +123,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
             />
           ) : (
             <UserList 
-              currentUser={currentUser}
+              dialogues={dialogues}
               createDialogue={createDialogue}
             />
           )} 
@@ -142,7 +142,7 @@ export default function ChatPage({currentUser, setCurrentUser}) {
     )
   } else {
     return (
-      <p> Loading... </p>
+      <p className="text-center"> Loading... </p>
     )
   }
 }

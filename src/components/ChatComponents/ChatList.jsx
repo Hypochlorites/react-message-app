@@ -45,9 +45,7 @@ export default function ChatList({currentUser, selectedDialogue, setSelectedDial
         console.error("Error in getUsernames:", e, e.message)
       }
     }
-    if (dialogues !== null) {
-      getUsernames(dialogues)
-    }
+    getUsernames(dialogues)
   }, [dialogues])
 
   

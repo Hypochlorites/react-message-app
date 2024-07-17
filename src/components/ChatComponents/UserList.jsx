@@ -5,24 +5,25 @@ import { db } from '../../../.firebaseConfig'
 import { getDocs, collection } from 'firebase/firestore' 
 
 
-export default function UserList({currentUser, createDialogue})  {
+export default function UserList({dialogues, createDialogue})  {
   //State Variables
   const [users, setUsers] = useState([])
   const [error, setError] = useState(null)
 
   //useEffects  
   useEffect(() => {
-    const getUsers = async () => {
+    const getUsers = async (dialogues) => {
       try {
         const userSnaps = await getDocs(collection(db, "users")) 
-        const users = userSnaps.docs.map(doc => ({...doc.data()})).filter(user => user.id !== currentUser.uid)
-        setUsers(users)
+        const users = userSnaps.docs.map(doc => ({...doc.data()}))
+        const filteredUsers = users.filter(user => !dialogues.some(dialogue => Object.values(dialogue).includes(user.id)))
+        setUsers(filteredUsers)
       } catch (e) {
         setError(`Error getting userlist: ${e}`)
         console.error("Error in getUsers:", e, e.message)
       }
     }
-    getUsers()
+    getUsers(dialogues)
   }, [])
 
   
