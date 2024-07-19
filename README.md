@@ -7,7 +7,7 @@ Updated version of an old project that I used to learn react. This project aims 
 Connected to a firebase database for authentication, and the storage of users, dialogues, and messages. Various state variables are used to have the website affected by these database elements. Extensive use of react and firebase functions. Immense conditional rendering and error handling. Fully functional chat page. 
 
 ## Todo:
-  * Add timestamps to messages
+  * Improve display of messages 
   * Optimize all functions and useEffects related to chatPage
   * Update homepage
   * styling

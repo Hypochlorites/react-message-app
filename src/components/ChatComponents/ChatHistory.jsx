@@ -10,6 +10,27 @@ import Message from './Message'
 export default function ChatHistory({currentUser, selectedDialogue, messages, setMessages}) {
   //State Variables 
   const [error, setError] = useState(null)
+
+  //Functions
+  const formatDate = (timestamp) => {
+    try {
+      const date = timestamp.toDate()
+      const optionsDate = { 
+        month: 'numeric', 
+        day: 'numeric', 
+        year: 'numeric',
+      }
+      const optionsTime = { 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        hour12: true 
+      }
+      return date.toLocaleDateString('en-US', optionsDate) + ' ' + date.toLocaleTimeString('en-US', optionsTime)
+    } catch (e) {
+      setError(`Error formatting date: ${e}`)
+      console.error("Error in formatDate:", e, e.message)
+    }
+  }
   
   //useEffects
   useEffect(() => {
@@ -47,8 +68,9 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
               {messages.map((message, id) => (
                 <li key={id}>
                   <Message 
-                    message={message}
+                    message={message.message}
                     isIncoming={message.from !== currentUser.uid}
+                    timestamp={formatDate(message.timeStamp)}
                   />
                 </li>
               ))}
