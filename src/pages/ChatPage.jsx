@@ -2,9 +2,10 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 //Firebase imports 
-import { db, auth } from '../../.firebaseConfig'
-import { onAuthStateChanged } from 'firebase/auth';
+import { db } from '../../.firebaseConfig'
 import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs } from 'firebase/firestore'
+//Context imports
+import { useCurrentUser } from '../contexts/CurrentUserContext'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"
 import ChatList from '../components/ChatComponents/ChatList'
@@ -12,7 +13,7 @@ import ChatHistory from '../components/ChatComponents/ChatHistory'
 import UserList from '../components/ChatComponents/UserList'
 
 
-export default function ChatPage({currentUser, setCurrentUser}) {
+export default function ChatPage() {
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
@@ -22,6 +23,8 @@ export default function ChatPage({currentUser, setCurrentUser}) {
 
   //Functions
   const navigate = useNavigate()
+
+  const { currentUser } = useCurrentUser()
   
   const createDialogue = async (otherUser_id) => {
     try {
@@ -61,28 +64,28 @@ export default function ChatPage({currentUser, setCurrentUser}) {
   }
   
   //useEffects
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      try {
-        if (user) {
-          setCurrentUser(user)
-        } else {
-          setCurrentUser(null)
-          navigate('/signin')
-        }
-      } catch (e) {
-        setError(`Error checking user auth: ${e}`)
-        console.error("Error in onAuthStateChanged:", e, e.message)
-      } 
-    })
-    return () => {
-      try {
-        unsubscribe()
-      } catch (e) {
-        console.error("Error unsubscribing from onAuthStateChanged:", e, e.message)
-      }
-    }
-  }, [])
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     try {
+  //       if (user) {
+  //         setCurrentUser(user)
+  //       } else {
+  //         setCurrentUser(null)
+  //         navigate('/signin')
+  //       }
+  //     } catch (e) {
+  //       setError(`Error checking user auth: ${e}`)
+  //       console.error("Error in onAuthStateChanged:", e, e.message)
+  //     } 
+  //   })
+  //   return () => {
+  //     try {
+  //       unsubscribe()
+  //     } catch (e) {
+  //       console.error("Error unsubscribing from onAuthStateChanged:", e, e.message)
+  //     }
+  //   }
+  // }, [])
 
   useEffect(() => {
     const getDialogues = async () => {
@@ -115,7 +118,6 @@ export default function ChatPage({currentUser, setCurrentUser}) {
           </button>
           {!startNewChat ? (
             <ChatList 
-              currentUser={currentUser}
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
               dialogues={dialogues}
@@ -130,7 +132,6 @@ export default function ChatPage({currentUser, setCurrentUser}) {
         <div className="basis-full flex flex-col justify-content: space-between">
           {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
           <ChatHistory
-            currentUser={currentUser}
             selectedDialogue={selectedDialogue}
             messages={messages}
             setMessages={setMessages}

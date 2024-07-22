@@ -1,4 +1,13 @@
-export default function HomePage({currentUser}) {
+//Context imports 
+import { useCurrentUser } from "./../contexts/CurrentUserContext"
+
+
+export default function HomePage() {
+  //Functions
+  const { currentUser } = useCurrentUser()
+
+
+  //HTML
   if (currentUser) {
     return (
       <h1 className="font-bold"> Home </h1>

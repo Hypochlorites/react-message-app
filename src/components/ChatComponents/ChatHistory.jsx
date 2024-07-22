@@ -3,15 +3,19 @@ import { useState, useEffect } from 'react'
 //Firebase imports
 import { db } from '../../../.firebaseConfig'
 import { collection, doc, getDocs } from 'firebase/firestore'
+//Context imports
+import { useCurrentUser } from '../../contexts/CurrentUserContext'
 //Component imports 
 import Message from './Message'
 
 
-export default function ChatHistory({currentUser, selectedDialogue, messages, setMessages}) {
+export default function ChatHistory({selectedDialogue, messages, setMessages}) {
   //State Variables 
   const [error, setError] = useState(null)
 
   //Functions
+  const { currentUser } = useCurrentUser()
+  
   const formatDate = (timestamp) => {
     try {
       const date = timestamp.toDate()

@@ -3,16 +3,20 @@ import { useState, useEffect } from 'react'
 //Firebase imports
 import { db } from '../../../.firebaseConfig'
 import { doc, getDoc } from 'firebase/firestore'
+//Context imports
+import { useCurrentUser } from '../../contexts/CurrentUserContext'
 //Component imports 
 import ChatListItem from './ChatListItem'
 
 
-export default function ChatList({currentUser, selectedDialogue, setSelectedDialogue, dialogues}) {
+export default function ChatList({selectedDialogue, setSelectedDialogue, dialogues}) {
   //State Variables
   const [usernames, setUsernames] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
+  const { currentUser } = useCurrentUser()
+  
   const getOtherUsername = async (dialogue) => {
     try {
       const otherUser_id = (dialogue.user1 === currentUser.uid) ? dialogue.user2 : dialogue.user1
