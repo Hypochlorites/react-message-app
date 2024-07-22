@@ -9,10 +9,12 @@ Connected to a firebase database for authentication, and the storage of users, d
 ## Todo:
   * Improve display of messages 
   * Optimize all functions and useEffects related to chatPage
+    * especially the methods of getting usernames 
   * Update homepage
   * styling
   * Profile page
   * more interaction with other users 
+  * global get user function
 
 ## Database Architecture 
   * ### users

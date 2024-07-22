@@ -2,9 +2,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 //Firebase imports 
-import { db } from '../../.firebaseConfig'
+import { db, auth } from '../../.firebaseConfig'
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../.firebaseConfig'
 import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs } from 'firebase/firestore'
 //Component imports
 import MessageInput from "../components/ChatComponents/MessageInput"

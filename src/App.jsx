@@ -1,6 +1,8 @@
 //React imports 
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+//Context imports
+import { CurrentUserProvider } from "./contexts/CurrentUserContext"
 //Component imports
 import NavBar from "./components/NavBar"
 //Page imports
@@ -17,18 +19,20 @@ export default function App() {
 
   //HTML
   return (
-    <div className="flex flex-col min-h-screen">
-      <BrowserRouter>
-        {currentUser && <NavBar/>}
-        <div className="flex-grow flex flex-col">
-          <Routes>
-            <Route path ="/" element={<HomePage currentUser={currentUser} />} />         
-            <Route path ="/chat" element={<ChatPage currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />    
-            <Route path ="/signup" element={<SignUpPage/>} />    
-            <Route path ="/signin" element={<SignInPage/>} />   
-          </Routes>
-        </div>
-      </BrowserRouter>
-    </div>
+    <CurrentUserProvider>
+      <div className="flex flex-col min-h-screen">
+        <BrowserRouter>
+          {currentUser && <NavBar/>}
+          <div className="flex-grow flex flex-col">
+            <Routes>
+              <Route path ="/" element={<HomePage currentUser={currentUser} />} />         
+              <Route path ="/chat" element={<ChatPage currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />    
+              <Route path ="/signup" element={<SignUpPage/>} />    
+              <Route path ="/signin" element={<SignInPage/>} />   
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </div>
+    </CurrentUserProvider>
   )
 }

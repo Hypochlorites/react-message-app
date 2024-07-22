@@ -31,7 +31,7 @@ export default function ChatHistory({currentUser, selectedDialogue, messages, se
       console.error("Error in formatDate:", e, e.message)
     }
   }
-  
+
   //useEffects
   useEffect(() => {
     const getMessages = async () => {
