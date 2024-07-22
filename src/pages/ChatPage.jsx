@@ -86,7 +86,12 @@ export default function ChatPage() {
   //     }
   //   }
   // }, [])
-
+  useEffect(() => {
+    if (currentUser === null) {
+      navigate("/signin")
+    }
+  }, [currentUser])
+  
   useEffect(() => {
     const getDialogues = async () => {
       try {
@@ -105,9 +110,9 @@ export default function ChatPage() {
     }
   }, [messages, currentUser])
   
-  
+
   //HTML
-  if (currentUser && dialogues) {
+  if (dialogues) {
     return (
       <div className="flex flex-grow">
         <div className="flex flex-col basis-60">
