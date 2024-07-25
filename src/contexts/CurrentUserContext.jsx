@@ -1,5 +1,5 @@
 //React imports
-import {useState, useEffect, createContext, useContext} from 'react'
+import {useState, useEffect, useMemo, createContext, useContext} from 'react'
 //Firebase imports
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../.firebaseConfig'
@@ -22,8 +22,10 @@ export const CurrentUserProvider = ({ children }) => {
     return () => unsubscribe()
   }, [])
 
+  const value = useMemo(() => ({ currentUser, setCurrentUser }), [currentUser, setCurrentUser])
+  
   return (
-    <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+    <CurrentUserContext.Provider value={value}>
       {children}
     </CurrentUserContext.Provider>
   )

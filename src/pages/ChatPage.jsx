@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 //Firebase imports 
 import { db } from '../../.firebaseConfig'
-import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs } from 'firebase/firestore'
+import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs, onSnapshot } from 'firebase/firestore'
 //Context imports
 import { useCurrentUser } from '../contexts/CurrentUserContext'
 //Component imports
@@ -64,6 +64,7 @@ export default function ChatPage() {
   }
   
   //useEffects
+  
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, (user) => {
   //     try {
@@ -92,27 +93,41 @@ export default function ChatPage() {
     }
   }, [currentUser])
   
+  // useEffect(() => {
+  //   const getDialogues = async () => {
+  //     try {
+  //       const dialoguesRef = collection(db, "dialogues")
+  //       const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
+  //       const dialogueSnaps = await getDocs(q)
+  //       const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
+  //       setDialogues(dialogues)
+  //     } catch (e) {
+  //       setError(`Error getting dialogues: ${e}`)
+  //       console.error("Error in getDialogues:", e, e.message)
+  //     }
+  //   }
+  //   if (currentUser) {
+  //     getDialogues()
+  //   } 
+  // }, [currentUser])
   useEffect(() => {
-    const getDialogues = async () => {
-      try {
-        const dialoguesRef = collection(db, "dialogues")
-        const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
-        const dialogueSnaps = await getDocs(q)
-        const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
+    try {
+      const dialoguesRef = collection(db, "dialogues");
+      const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
+      const unsubscribeDialogues = onSnapshot(q, (snapshot) => {
+        const dialogues = snapshot.docs.map(doc => ({ ...doc.data() }));
         setDialogues(dialogues)
-      } catch (e) {
-        setError(`Error getting dialogues: ${e}`)
-        console.error("Error in getDialogues:", e, e.message)
-      }
+      })
+      return () => unsubscribeDialogues()                                  
+    } catch (e) {
+      setError(`Error getting dialogues: ${e}`)
+      console.error("Error in getDialogues useEffect:", e, e.message)
     }
-    if (currentUser) {
-      getDialogues()
-    }
-  }, [messages, currentUser])
+  }, [])
   
 
   //HTML
-  if (dialogues) {
+  if (currentUser && dialogues) {
     return (
       <div className="flex flex-grow">
         <div className="flex flex-col basis-60">

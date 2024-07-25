@@ -17,8 +17,6 @@ Connected to a firebase database for authentication, and the storage of users, d
   * styling
   * Profile page
   * more interaction with other users 
-  * global get user function
-  * general firebase querying functions
   * groupchats 
 
 ## Database Architecture 
