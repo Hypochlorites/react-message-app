@@ -1,8 +1,8 @@
 //React imports
-import { useState } from 'react'
+import { useState, memo } from 'react'
 
 
-export default function MessageInput({ sendMessage }) {
+const MessageInput = memo(({ sendMessage }) => {
   //State Variables
   const [toSend, setToSend] = useState("")
   
@@ -31,4 +31,6 @@ export default function MessageInput({ sendMessage }) {
       </form>
     </div>
   )
-}
+})
+
+export default MessageInput

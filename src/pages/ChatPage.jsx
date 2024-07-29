@@ -1,6 +1,6 @@
 //React imports
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 //Firebase imports 
 import { db } from '../../.firebaseConfig'
 import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs, onSnapshot } from 'firebase/firestore'
@@ -43,7 +43,7 @@ export default function ChatPage() {
     }
   }
   
-  const sendMessage = async (toSend) => {
+  const sendMessage = useCallback(async (toSend) => {
     try {
       const dialogueRef = doc(db, "dialogues", selectedDialogue)
       const newMessage = collection(dialogueRef, "messages")
@@ -61,7 +61,7 @@ export default function ChatPage() {
       setError(`Error sending message: ${e}`)
       console.error("Error in sendMessage:", e, e.message)
     }
-  }
+  }, [selectedDialogue, currentUser, messages])
   
   //useEffects
   
@@ -93,23 +93,6 @@ export default function ChatPage() {
     }
   }, [currentUser])
   
-  // useEffect(() => {
-  //   const getDialogues = async () => {
-  //     try {
-  //       const dialoguesRef = collection(db, "dialogues")
-  //       const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
-  //       const dialogueSnaps = await getDocs(q)
-  //       const dialogues = dialogueSnaps.docs.map(doc => ({ ...doc.data() }))
-  //       setDialogues(dialogues)
-  //     } catch (e) {
-  //       setError(`Error getting dialogues: ${e}`)
-  //       console.error("Error in getDialogues:", e, e.message)
-  //     }
-  //   }
-  //   if (currentUser) {
-  //     getDialogues()
-  //   } 
-  // }, [currentUser])
   useEffect(() => {
     try {
       const dialoguesRef = collection(db, "dialogues");
