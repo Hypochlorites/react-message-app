@@ -35,7 +35,7 @@ export default function UserList({dialogues, createDialogue})  {
       ) : (
         <div>
           { users.length === 0 ? (
-            <p className="p-1"> Loading... </p>
+            <p className="p-1"> Loading </p>
           ) : (
             <ul className="flex flex-col divide-y">
               {users.map((user, id) => (

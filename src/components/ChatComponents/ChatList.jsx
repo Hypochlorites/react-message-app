@@ -1,5 +1,5 @@
 //React imports
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 //Firebase imports
 import { db } from '../../../.firebaseConfig'
 import { doc, getDoc } from 'firebase/firestore'
@@ -9,7 +9,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 import ChatListItem from './ChatListItem'
 
 
-export default function ChatList({selectedDialogue, setSelectedDialogue, dialogues}) {
+const ChatList = memo(({selectedDialogue, setSelectedDialogue, dialogues}) => {
   //State Variables
   const [usernames, setUsernames] = useState(null)
   const [error, setError] = useState(null)
@@ -81,4 +81,7 @@ export default function ChatList({selectedDialogue, setSelectedDialogue, dialogu
       </div>
     </div>
   )
-}
+})
+
+ChatList.displayName = "ChatList"
+export default ChatList

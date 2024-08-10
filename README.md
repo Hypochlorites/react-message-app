@@ -12,7 +12,6 @@ Connected to a firebase database for authentication, and the storage of users, d
     * usernames
     * profile pictures 
   * Optimize all functions and useEffects related to chatPage
-    * especially the methods of getting usernames 
   * Update homepage
   * styling
   * Profile page

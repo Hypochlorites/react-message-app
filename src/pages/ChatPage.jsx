@@ -1,9 +1,9 @@
 //React imports
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 //Firebase imports 
 import { db } from '../../.firebaseConfig'
-import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, getDocs, onSnapshot } from 'firebase/firestore'
+import { collection, doc, addDoc, setDoc, updateDoc, Timestamp, query, where, or, onSnapshot } from 'firebase/firestore'
 //Context imports
 import { useCurrentUser } from '../contexts/CurrentUserContext'
 //Component imports
@@ -43,7 +43,7 @@ export default function ChatPage() {
     }
   }
   
-  const sendMessage = useCallback(async (toSend) => {
+  const sendMessage = async (toSend) => {
     try {
       const dialogueRef = doc(db, "dialogues", selectedDialogue)
       const newMessage = collection(dialogueRef, "messages")
@@ -61,7 +61,9 @@ export default function ChatPage() {
       setError(`Error sending message: ${e}`)
       console.error("Error in sendMessage:", e, e.message)
     }
-  }, [selectedDialogue, currentUser, messages])
+  }
+
+  const memoizedDialogues = useMemo(() => dialogues, [dialogues])
   
   //useEffects
   
@@ -123,11 +125,11 @@ export default function ChatPage() {
             <ChatList 
               selectedDialogue={selectedDialogue}
               setSelectedDialogue={setSelectedDialogue}
-              dialogues={dialogues}
+              dialogues={memoizedDialogues}
             />
           ) : (
             <UserList 
-              dialogues={dialogues}
+              dialogues={memoizedDialogues}
               createDialogue={createDialogue}
             />
           )} 
