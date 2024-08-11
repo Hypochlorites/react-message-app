@@ -4,7 +4,7 @@ import { useState } from 'react'
 //Firebase imports 
 import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore'
 import { auth, db } from '../../../.firebaseConfig'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 
 
 export default function SignUpPage() {
@@ -43,6 +43,7 @@ export default function SignUpPage() {
         username: username
       }
       await setDoc(doc(db, "users", userInfo.id), userInfo)
+      await updateProfile(auth.currentUser, { displayName: userInfo.username })
       navigate("/signin")
     } catch (e) {
       switch (e.code) {

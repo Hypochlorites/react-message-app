@@ -7,6 +7,7 @@ import { auth } from '../../.firebaseConfig'
 //Context imports
 import { useCurrentUser } from '../contexts/CurrentUserContext'
 
+
 export default function NavBar() {
   //State Variables
   const [error, setError] = useState(null)

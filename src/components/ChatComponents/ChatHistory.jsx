@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 //Firebase imports
 import { db } from '../../../.firebaseConfig'
-import { collection, doc, getDocs } from 'firebase/firestore'
+import { collection, doc, getDocs, getDoc } from 'firebase/firestore'
 //Context imports
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 //Component imports 
@@ -11,23 +11,43 @@ import Message from './Message'
 
 export default function ChatHistory({selectedDialogue, messages, setMessages}) {
   //State Variables 
+  const [username, setUsername] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
   const { currentUser } = useCurrentUser()
+
+  const dateCheck = (timestamp) => {
+    const today = new Date()
+    if (timestamp.getMonth() == today.getMonth() && timestamp.getFullYear() == today.getFullYear()) { 
+      if (timestamp.getDate() == today.getDate()) {
+        return "today"
+       }
+      today.setDate(today.getDate()-1)
+      if (timestamp.getDate() === today.getDate()) {
+        return "yesterday"
+      } 
+    }  
+  }
   
   const formatDate = (timestamp) => {
     try {
       const date = timestamp.toDate()
-      const optionsDate = { 
-        month: 'numeric', 
-        day: 'numeric', 
-        year: 'numeric',
-      }
       const optionsTime = { 
         hour: 'numeric', 
         minute: 'numeric', 
         hour12: true 
+      }
+      if (dateCheck(date) == "today") {
+        return "Today at " + date.toLocaleTimeString('en-US', optionsTime)
+      }
+      if (dateCheck(date) == "yesterday") {
+        return "Yesterday at " + date.toLocaleTimeString('en-US', optionsTime)
+      }
+      const optionsDate = { 
+        month: 'numeric', 
+        day: 'numeric', 
+        year: 'numeric',
       }
       return date.toLocaleDateString('en-US', optionsDate) + ' ' + date.toLocaleTimeString('en-US', optionsTime)
     } catch (e) {
@@ -36,27 +56,51 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
     }
   }
 
+  const getMessages = async (dialogueRef) => {
+    try {
+      const messageSnaps = await getDocs(collection(dialogueRef, "messages"))
+      const messages = messageSnaps.docs.map(doc => ({...doc.data()}))
+      const sortedMessages = messages.sort((a, b) => a.timeStamp - b.timeStamp)
+      setMessages(sortedMessages)
+    } catch (e) {
+      setError(`Error getting messages: ${e}`)
+      console.error("Error in getMessages:", e, e.message)
+    }
+  }
+
+  const getUsername = async (dialogue) => {
+    try {
+      const user_id = (dialogue.user1 === currentUser.uid) ? dialogue.user2 : dialogue.user1
+      console.log(currentUser)
+      const userRef = doc(db, "users", user_id)
+      const userSnap = await getDoc(userRef)
+      const userObj = userSnap.data()
+      setUsername(userObj.username)
+    } catch (e) {
+      setError(`Error getting other user's username: ${e}`)
+      console.error("Error in getUsername", e, e.message)
+    }
+  }
+  
   //useEffects
   useEffect(() => {
-    const getMessages = async () => {
+    const fetchData = async () => {
       try {
         const dialogueRef = doc(db, "dialogues", selectedDialogue)
-        const messageSnaps = await getDocs(collection(dialogueRef, "messages"))
-        const messages = messageSnaps.docs.map(doc => ({...doc.data()}))
-        const sortedMessages = messages.sort((a, b) => a.timeStamp - b.timeStamp)
-        setMessages(sortedMessages)
+        const dialogueSnap = await getDoc(dialogueRef)
+        const dialogue = dialogueSnap.data()
+        await getMessages(dialogueRef) 
+        await getUsername(dialogue)
       } catch (e) {
-        setError(`Error getting messages: ${e}`)
-        console.error("Error in getMessages:", e, e.message)
+        setError(`Error fecthing dialogues: ${e}`)
+        console.error("Error is fetchData:", e, e.message)
       }
     }
     if (selectedDialogue) {
-      getMessages()
-    } else {
-      setMessages([])
+      fetchData()
     }
   }, [selectedDialogue])
-
+  
   
   //HTML
   return (
@@ -75,6 +119,8 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
                     message={message.message}
                     isIncoming={message.from !== currentUser.uid}
                     timestamp={formatDate(message.timeStamp)}
+                    otherUser={username}
+                    user={currentUser.displayName}
                   />
                 </li>
               ))}

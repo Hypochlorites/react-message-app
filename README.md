@@ -8,10 +8,7 @@ Connected to a firebase database for authentication, and the storage of users, d
 
 ## Todo:
   * Improve display of messages
-    * better timestamps
-    * usernames
     * profile pictures 
-  * Optimize all functions and useEffects related to chatPage
   * Update homepage
   * styling
   * Profile page
