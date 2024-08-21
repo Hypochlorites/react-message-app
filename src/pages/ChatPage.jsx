@@ -66,29 +66,6 @@ export default function ChatPage() {
   const memoizedDialogues = useMemo(() => dialogues, [dialogues])
   
   //useEffects
-  
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     try {
-  //       if (user) {
-  //         setCurrentUser(user)
-  //       } else {
-  //         setCurrentUser(null)
-  //         navigate('/signin')
-  //       }
-  //     } catch (e) {
-  //       setError(`Error checking user auth: ${e}`)
-  //       console.error("Error in onAuthStateChanged:", e, e.message)
-  //     } 
-  //   })
-  //   return () => {
-  //     try {
-  //       unsubscribe()
-  //     } catch (e) {
-  //       console.error("Error unsubscribing from onAuthStateChanged:", e, e.message)
-  //     }
-  //   }
-  // }, [])
   useEffect(() => {
     if (currentUser === null) {
       navigate("/signin")

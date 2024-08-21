@@ -71,7 +71,6 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
   const getUsername = async (dialogue) => {
     try {
       const user_id = (dialogue.user1 === currentUser.uid) ? dialogue.user2 : dialogue.user1
-      console.log(currentUser)
       const userRef = doc(db, "users", user_id)
       const userSnap = await getDoc(userRef)
       const userObj = userSnap.data()

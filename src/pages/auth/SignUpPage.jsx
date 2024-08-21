@@ -40,7 +40,8 @@ export default function SignUpPage() {
       const userInfo = {
         id: user.uid,
         email: user.email,
-        username: username
+        username: username,
+        bio: ""
       }
       await setDoc(doc(db, "users", userInfo.id), userInfo)
       await updateProfile(auth.currentUser, { displayName: userInfo.username })

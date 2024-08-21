@@ -13,7 +13,9 @@ Connected to a firebase database for authentication, and the storage of users, d
   * styling
   * Profile page
   * Revamp userlist
-  * groupchats 
+  * groupchats
+  * error handling w/contexts
+  * signin page re-direct
 
 ## Database Architecture 
   * ### users

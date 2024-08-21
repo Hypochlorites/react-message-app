@@ -3,10 +3,12 @@ import { useCurrentUser } from "./../contexts/CurrentUserContext"
 
 
 export default function HomePage() {
+  //State Variables
+  
   //Functions
   const { currentUser } = useCurrentUser()
-
-
+  
+  
   //HTML
   if (currentUser) {
     return (
