@@ -44,7 +44,8 @@ export default function SignUpPage() {
         bio: ""
       }
       await setDoc(doc(db, "users", userInfo.id), userInfo)
-      await updateProfile(auth.currentUser, { displayName: userInfo.username })
+      await updateProfile(auth.currentUser, { displayName: userInfo.username,
+                                              photoURL: "/src/data/pfp.png"})
       navigate("/signin")
     } catch (e) {
       switch (e.code) {

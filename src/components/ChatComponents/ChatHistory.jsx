@@ -97,6 +97,8 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
     }
     if (selectedDialogue) {
       fetchData()
+    } else {
+      setMessages([])
     }
   }, [selectedDialogue])
   

@@ -7,6 +7,14 @@
         "version": 1403,
         "index": 87
       }
+    ],
+    "src/components/ProfileBar.jsx": [
+      {
+        "id": "91136b76-15b9-42ba-83af-d46d2ae1640e",
+        "line": 26,
+        "version": 1756,
+        "index": 821
+      }
     ]
   }
 }

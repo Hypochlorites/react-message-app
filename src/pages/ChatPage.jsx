@@ -111,7 +111,7 @@ export default function ChatPage() {
             />
           )} 
         </div>
-        <div className="basis-full flex flex-col justify-content: space-between">
+        <div className="basis-full flex flex-col">
           {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
           <ChatHistory
             selectedDialogue={selectedDialogue}

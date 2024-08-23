@@ -19,7 +19,6 @@ export const CurrentUserProvider = ({ children }) => {
       const userRef = doc(db, "users", user_id)
       const userSnap = await getDoc(userRef)
       const userObj = userSnap.data()
-      console.log("userObj:", userObj)
       setCurrentUserObj(userObj)
     } catch (e) {
       setError(`Error getting user object: ${e}`)
