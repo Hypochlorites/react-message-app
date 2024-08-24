@@ -23,9 +23,8 @@ export default function ProfilePage () {
   
   //HTML
   return (
-    <div className="flex-grow bg-gray-400">
-
-      <div className=" mt-4">
+    <div className="flex flex-grow bg-gray-300 justify-center">
+      <div className="mt-4 basis-3/4">
          <ProfileBar/>
       </div>
     </div>
