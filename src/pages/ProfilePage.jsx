@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 //Context imports
 import { useCurrentUser } from '../contexts/CurrentUserContext'
 //Component imporst
-import ProfileBar from '../components/ProfileBar'
+import ProfileEditor from '../components/ProfileComponents/ProfileEditor'
 
 
 export default function ProfilePage () {
@@ -22,11 +22,17 @@ export default function ProfilePage () {
 
   
   //HTML
-  return (
-    <div className="flex flex-grow bg-gray-300 justify-center">
-      <div className="mt-4 basis-3/4">
-         <ProfileBar/>
+  if (currentUser) {
+    return (
+      <div className="flex flex-grow bg-gray-300 justify-center">
+        <div className="mt-4 basis-3/4">
+           <ProfileEditor/>
+        </div>
       </div>
-    </div>
     )
+  } else {
+    return (
+      <p className="text-center"> Loading... </p>
+    )
+  }
 }
