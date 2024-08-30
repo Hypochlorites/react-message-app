@@ -24,10 +24,10 @@ export default function ProfilePage () {
   //HTML
   if (currentUser) {
     return (
-      <div className="flex flex-grow bg-gray-300 justify-center">
-        <div className="mt-4 basis-3/4">
-           <ProfileEditor/>
-        </div>
+      <div className="flex flex-col flex-grow bg-gray-300 items-center">
+          <div className="flex flex-col flex-grow w-8/12">
+            <ProfileEditor/>
+          </div>
       </div>
     )
   } else {
