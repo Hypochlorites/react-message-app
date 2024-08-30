@@ -9,12 +9,13 @@ import { useCurrentUser } from '../contexts/CurrentUserContext'
 
 
 export default function NavBar() {
+  //Setup
+  const { currentUser } = useCurrentUser()
+
   //State Variables
   const [error, setError] = useState(null)
   
   //Functions
-  const { currentUser } = useCurrentUser()
-
   const signout = () => {
     try {
       signOut(auth)

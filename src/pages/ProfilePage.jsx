@@ -8,9 +8,8 @@ import ProfileEditor from '../components/ProfileComponents/ProfileEditor'
 
 
 export default function ProfilePage () {
-  //Functions
+  //Setup
   const navigate = useNavigate()
-
   const { currentUser } = useCurrentUser()
 
   //useEffects

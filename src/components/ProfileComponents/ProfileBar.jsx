@@ -1,10 +1,11 @@
 //Context imports 
 import { useCurrentUser } from '../contexts/CurrentUserContext'
 
+
 export default function ProfileBar() {  
-  //Functions
+  //Setup
   const { currentUser, currentUserObj } = useCurrentUser()
-  
+
   
   //HTML
   return (

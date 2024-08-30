@@ -8,6 +8,9 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 
 
 export default function SignUpPage() {
+  //Setup
+  const navigate = useNavigate()
+
   //State Variables
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -15,8 +18,6 @@ export default function SignUpPage() {
   const [error, setError] = useState(null)
   
   //Functions
-  const navigate = useNavigate()  
-
   const validateUsername = async () => {
     try {
       const q = query(collection(db, "users"), where("username", "==", username))

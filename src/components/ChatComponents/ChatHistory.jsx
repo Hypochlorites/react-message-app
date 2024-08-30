@@ -10,13 +10,14 @@ import Message from './Message'
 
 
 export default function ChatHistory({selectedDialogue, messages, setMessages}) {
+  //Setup 
+  const { currentUser } = useCurrentUser()
+
   //State Variables 
   const [username, setUsername] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
-  const { currentUser } = useCurrentUser()
-
   const dateCheck = (timestamp) => {
     const today = new Date()
     if (timestamp.getMonth() == today.getMonth() && timestamp.getFullYear() == today.getFullYear()) { 

@@ -14,6 +14,10 @@ import UserList from '../components/ChatComponents/UserList'
 
 
 export default function ChatPage() {
+  //Setup
+  const navigate = useNavigate()
+  const { currentUser } = useCurrentUser()
+  
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
   const [startNewChat, setStartNewChat] = useState(false)
@@ -22,10 +26,6 @@ export default function ChatPage() {
   const [error, setError] = useState(null)  
 
   //Functions
-  const navigate = useNavigate()
-
-  const { currentUser } = useCurrentUser()
-  
   const createDialogue = async (otherUser_id) => {
     try {
       const newDialogue = doc(collection(db, "dialogues"))

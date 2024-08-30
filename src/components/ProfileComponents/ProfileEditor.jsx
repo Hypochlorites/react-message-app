@@ -3,7 +3,9 @@ import { useState } from 'react'
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
+
 export default function ProfileEditor() {  
+  //Setup
   const { currentUser, currentUserObj } = useCurrentUser()
 
   //State Variables
@@ -11,7 +13,6 @@ export default function ProfileEditor() {
   const [bio, setBio] = useState(currentUserObj.bio)
   const [email, setEmail] = useState(currentUser.email)
   const [password, setPassword] = useState("")
-  
   
   //Functions
   const updatePfp = () => {

@@ -7,14 +7,15 @@ import { auth } from '../../../.firebaseConfig'
 
 
 export default function SignInPage() {
+  //Setup
+  const navigate = useNavigate()
+
   //State Variables
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
   
-  //Functions 
-  const navigate = useNavigate()
-  
+  //Functions   
   const signIn = async (e) => {
     e.preventDefault()
     try {

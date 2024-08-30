@@ -5,6 +5,8 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth, db } from '../../.firebaseConfig'
 import { doc, getDoc } from 'firebase/firestore'
 
+
+//Setup
 const CurrentUserContext = createContext()
 
 export const CurrentUserProvider = ({ children }) => {

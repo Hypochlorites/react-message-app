@@ -10,13 +10,14 @@ import ChatListItem from './ChatListItem'
 
 
 const ChatList = memo(({selectedDialogue, setSelectedDialogue, dialogues}) => {
+  //Setup
+  const { currentUser } = useCurrentUser()
+  
   //State Variables
   const [usernames, setUsernames] = useState(null)
   const [error, setError] = useState(null)
 
-  //Functions
-  const { currentUser } = useCurrentUser()
-  
+  //Functions  
   const getOtherUsername = async (dialogue) => {
     try {
       const otherUser_id = (dialogue.user1 === currentUser.uid) ? dialogue.user2 : dialogue.user1
