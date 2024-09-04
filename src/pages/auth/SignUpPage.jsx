@@ -24,8 +24,8 @@ export default function SignUpPage() {
       const querySnap = await getDocs(q)
       return (querySnap.size===0)
     } catch (e) {
-      setError(e.message)
-      console.error("Error validating username:", e)
+      setError(`Error validating username: ${e}`)
+      console.error("Error in validateUsername:", e, e.message)
     }
   }
   

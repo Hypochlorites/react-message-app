@@ -13,6 +13,7 @@ export const CurrentUserProvider = ({ children }) => {
   //StateVariables
   const [currentUser, setCurrentUser] = useState(null)
   const [currentUserObj, setCurrentUserObj] = useState(null)
+  const [currentUserRef, setCurrentUserRef] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
@@ -22,6 +23,7 @@ export const CurrentUserProvider = ({ children }) => {
       const userSnap = await getDoc(userRef)
       const userObj = userSnap.data()
       setCurrentUserObj(userObj)
+      setCurrentUserRef(userRef)
     } catch (e) {
       setError(`Error getting user object: ${e}`)
       console.error("Error in getUserObj:", e, e.message)
@@ -37,12 +39,13 @@ export const CurrentUserProvider = ({ children }) => {
       } else {
         setCurrentUser(null)
         setCurrentUserObj(null)
+        setCurrentUserRef(null)
       }
     })
     return () => unsubscribe()
   }, [])
 
-  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, error }), [currentUser, setCurrentUser, currentUserObj, error])
+  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, currentUserRef, error }), [currentUser, setCurrentUser, currentUserObj, currentUserRef, error])
   
   return (
     <CurrentUserContext.Provider value={value}>

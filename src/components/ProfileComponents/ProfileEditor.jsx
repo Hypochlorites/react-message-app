@@ -1,32 +1,51 @@
 //React imports 
 import { useState } from 'react'
+//Firebase imports 
+import { updateDoc } from 'firebase/firestore'
+import { auth } from '../../../.firebaseConfig'
+import { updateProfile } from 'firebase/auth'
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 
 export default function ProfileEditor() {  
   //Setup
-  const { currentUser, currentUserObj } = useCurrentUser()
+  const { currentUser, currentUserObj, currentUserRef } = useCurrentUser()
 
   //State Variables
   const [username, setUsername] = useState(currentUser.displayName)
   const [bio, setBio] = useState(currentUserObj.bio)
   const [email, setEmail] = useState(currentUser.email)
-  const [password, setPassword] = useState("")
+  const [error, setError] = useState(null)
   
   //Functions
   const updatePfp = () => {
     console.log("EEEE")  
   }
 
-  const updateUsername = (e) => {
+  const updateUsername = async (e) => {
     e.preventDefault()
-    console.log(username)
+    try {
+      if (username.length <= 15) {
+        await updateProfile(currentUser, {displayName: username})
+        setUsername(currentUser.displayName)
+      }
+    } catch (e) {
+      setError(`Error updating username: ${e}`)
+      console.error("Error in updateUsername:", e, e.message)
+    }
   }
   
-  const updateBio = (e) => {
+  const updateBio = async (e) => {
     e.preventDefault()
-    console.log(bio)
+    try {
+      if (bio.length <= 500) {
+        await updateDoc(currentUserRef, {bio: bio})
+      }
+    } catch (e) {
+      setError(`Error updating bio: ${e}`)
+      console.error("Error in updateBio:", e, e.message)
+    }
   }
 
   const updateEmail = (e) => {
