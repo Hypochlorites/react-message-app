@@ -1,8 +1,8 @@
 //React imports 
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 //Firebase imports 
 import { updateDoc } from 'firebase/firestore'
-import { auth } from '../../../.firebaseConfig'
 import { updateProfile } from 'firebase/auth'
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
@@ -10,6 +10,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 export default function ProfileEditor() {  
   //Setup
+  const navigate = useNavigate()
   const { currentUser, currentUserObj, currentUserRef } = useCurrentUser()
 
   //State Variables
@@ -28,7 +29,7 @@ export default function ProfileEditor() {
     try {
       if (username.length <= 15) {
         await updateProfile(currentUser, {displayName: username})
-        setUsername(currentUser.displayName)
+        navigate("/profile")
       }
     } catch (e) {
       setError(`Error updating username: ${e}`)
@@ -57,10 +58,10 @@ export default function ProfileEditor() {
     e.preventDefault()
   }
 
-  
   //HTML
   return (
-    <div className="flex flex-col flex-grow justify-evenly">
+    <div className="flex flex-col flex-grow bg-gray-300 justify-evenly">
+      {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
       <div className="flex flex-col text-white bg-black items-center rounded-xl">
         <h1 className="text-5xl font-bold underline mt-2">Profile</h1>
         <div className="flex mt-2 items-center w-4/6 justify-evenly">
