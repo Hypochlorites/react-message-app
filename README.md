@@ -9,13 +9,13 @@ Connected to a firebase database for authentication, and the storage of users, d
 ## Todo:
   * Improve display of messages
     * profile pictures 
+    * profile bar
   * Update homepage
   * styling
   * Profile page
   * Revamp userlist
   * groupchats
   * error handling w/contexts
-  * signin page re-direct
 
 ## Database Architecture 
   * ### users

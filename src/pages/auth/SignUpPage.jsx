@@ -1,15 +1,18 @@
 //React imports 
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 //Firebase imports 
 import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore'
 import { auth, db } from '../../../.firebaseConfig'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+//Context imports
+import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 
 export default function SignUpPage() {
   //Setup
   const navigate = useNavigate()
+  const { currentUser } = useCurrentUser()
 
   //State Variables
   const [email, setEmail] = useState("")
@@ -47,7 +50,6 @@ export default function SignUpPage() {
       await setDoc(doc(db, "users", userInfo.id), userInfo)
       await updateProfile(auth.currentUser, { displayName: userInfo.username,
                                               photoURL: "/src/data/pfp.png"})
-      navigate("/signin")
     } catch (e) {
       switch (e.code) {
         case AuthErrorCodes.EMAIL_EXISTS:
@@ -66,7 +68,14 @@ export default function SignUpPage() {
     }  
   }
 
+  //useEffects
+  useEffect(() => {
+    if (currentUser !== null) {
+      navigate("/signin")
+    }
+  }, [currentUser])
 
+  
   //HTML
   return (
     <div className="flex flex-col items-center">
