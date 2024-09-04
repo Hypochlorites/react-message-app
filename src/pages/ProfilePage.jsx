@@ -10,7 +10,7 @@ import ProfileEditor from '../components/ProfileComponents/ProfileEditor'
 export default function ProfilePage () {
   //Setup
   const navigate = useNavigate()
-  const { currentUser } = useCurrentUser()
+  const { contextError, currentUser } = useCurrentUser()
 
   //useEffects
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function ProfilePage () {
   if (currentUser) {
     return (
       <div className="flex flex-col flex-grow bg-gray-300 items-center">
+        {  contextError && <p className="text-red-600 bg-gray-300 p-1">{contextError}</p> }
           <div className="flex flex-col flex-grow w-8/12">
             <ProfileEditor/>
           </div>

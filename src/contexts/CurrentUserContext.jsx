@@ -14,7 +14,7 @@ export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null)
   const [currentUserObj, setCurrentUserObj] = useState(null)
   const [currentUserRef, setCurrentUserRef] = useState(null)
-  const [error, setError] = useState(null)
+  const [contextError, setContextError] = useState(null)
 
   //Functions
   const getUserObj = async (user_id) => {
@@ -25,7 +25,7 @@ export const CurrentUserProvider = ({ children }) => {
       setCurrentUserObj(userObj)
       setCurrentUserRef(userRef)
     } catch (e) {
-      setError(`Error getting user object: ${e}`)
+      setContextError(`Error getting user object: ${e}`)
       console.error("Error in getUserObj:", e, e.message)
     }
   }
@@ -45,7 +45,7 @@ export const CurrentUserProvider = ({ children }) => {
     return () => unsubscribe()
   }, [])
 
-  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, currentUserRef, error }), [currentUser, setCurrentUser, currentUserObj, currentUserRef, error])
+  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, currentUserRef, contextError }), [currentUser, setCurrentUser, currentUserObj, currentUserRef, contextError])
   
   return (
     <CurrentUserContext.Provider value={value}>

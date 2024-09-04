@@ -16,7 +16,7 @@ import UserList from '../components/ChatComponents/UserList'
 export default function ChatPage() {
   //Setup
   const navigate = useNavigate()
-  const { currentUser } = useCurrentUser()
+  const { currentUser, contextError } = useCurrentUser()
   
   //State Variables
   const [selectedDialogue, setSelectedDialogue] = useState(null)
@@ -112,6 +112,7 @@ export default function ChatPage() {
           )} 
         </div>
         <div className="basis-full flex flex-col">
+          {contextError && <p className="text-red-600 bg-gray-100 p-1">{contextError}</p> }
           {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
           <ChatHistory
             selectedDialogue={selectedDialogue}
