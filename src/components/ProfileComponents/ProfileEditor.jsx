@@ -1,5 +1,4 @@
 //React imports 
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 //Firebase imports 
 import { updateDoc } from 'firebase/firestore'
@@ -10,11 +9,10 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 export default function ProfileEditor() {  
   //Setup
-  const navigate = useNavigate()
-  const { currentUser, currentUserObj, currentUserRef } = useCurrentUser()
+  const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef } = useCurrentUser()
 
   //State Variables
-  const [username, setUsername] = useState(currentUser.displayName)
+  const [username, setUsername] = useState(currentUserObj.username)
   const [bio, setBio] = useState(currentUserObj.bio)
   const [email, setEmail] = useState(currentUser.email)
   const [error, setError] = useState(null)
@@ -29,7 +27,9 @@ export default function ProfileEditor() {
     try {
       if (username.length <= 15) {
         await updateProfile(currentUser, {displayName: username})
-        navigate("/profile")
+        await updateDoc(currentUserRef, {username: username})
+        const updatedCurrentUserObj = { ...currentUserObj, username: username}
+        setCurrentUserObj(updatedCurrentUserObj)        
       }
     } catch (e) {
       setError(`Error updating username: ${e}`)
@@ -42,6 +42,8 @@ export default function ProfileEditor() {
     try {
       if (bio.length <= 500) {
         await updateDoc(currentUserRef, {bio: bio})
+        const updatedCurrentUserObj = { ...currentUserObj, bio: bio}
+        setCurrentUserObj(updatedCurrentUserObj)
       }
     } catch (e) {
       setError(`Error updating bio: ${e}`)
@@ -59,6 +61,11 @@ export default function ProfileEditor() {
   }
 
   //HTML
+  if (currentUserObj === null) {
+    return (
+      <p className="text-center"> Loading... </p>
+    )
+  }
   return (
     <div className="flex flex-col flex-grow bg-gray-300 justify-evenly">
       {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
@@ -68,27 +75,33 @@ export default function ProfileEditor() {
           <img onClick={updatePfp}
             src={currentUser.photoURL} width="200px" height="200px">
           </img>
-          <form className="flex items-center" onSubmit={updateUsername}>
-            <input 
-              className="font-semibold text-4xl bg-gray-400 rounded-lg text-center w-3/4"
-              type="text"
-              name="username"
-              value={username} 
-              onChange={(e) => { setUsername(e.target.value) }} >
-            </input>
-            {(currentUser.displayName != username) && <button className="bg-gray-500 rounded-lg border-2 border-white ml-2 w-16 hover:bg-green-200" type="submit"> Save </button>}
+          <form className="flex flex-col" onSubmit={updateUsername}>
+            <div className="flex items-center">
+              <input 
+                className="font-semibold text-4xl bg-gray-400 rounded-lg text-center w-3/4"
+                type="text"
+                name="username"
+                value={username} 
+                onChange={(e) => { setUsername(e.target.value) }} >
+              </input>
+              {(currentUserObj.username != username) && <button className="bg-gray-500 rounded-lg border-2 border-white ml-2 w-16 hover:bg-green-200" type="submit"> Save </button>}
+            </div>
+            {(username.length > 15) && <p className="text-red-600 bg-black p-1">Character limit: 15</p>}
           </form>
         </div>
-        <form className="flex items-center w-11/12" onSubmit={updateBio}> 
-          <textarea 
-            className="flex-grow resize-none text-2xl bg-gray-400 rounded-lg text-center mt-4 mb-4 h-48 w-11/12"
-            id="bio"
-            name="bio"
-            wrap="soft"
-            value={bio}
-            onChange={(e) => { setBio(e.target.value) }} >
-          </textarea>
-          {(currentUserObj.bio != bio) && <button className="bg-gray-500 rounded-lg border-2 border-white ml-2 w-16 hover:bg-green-200" type="submit"> Save </button>}
+        <form className="flex flex-col w-11/12" onSubmit={updateBio}> 
+          <div className="flex items-center ">
+            <textarea 
+              className="flex-grow resize-none text-2xl bg-gray-400 rounded-lg text-center mt-4 mb-4 h-48 w-11/12"
+              id="bio"
+              name="bio"
+              wrap="soft"
+              value={bio}
+              onChange={(e) => { setBio(e.target.value) }} >
+            </textarea>
+            {(currentUserObj.bio != bio) && <button className="bg-gray-500 rounded-lg border-2 border-white ml-2 w-16 hover:bg-green-200" type="submit"> Save </button>}
+          </div>
+          {(bio.length > 500) && <p className="text-red-600 bg-black p-1">Character limit: 500</p>}
         </form>
       </div>
       <div className="flex flex-col text-white bg-black items-center rounded-xl">

@@ -45,7 +45,7 @@ export const CurrentUserProvider = ({ children }) => {
     return () => unsubscribe()
   }, [])
 
-  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, currentUserRef, contextError }), [currentUser, setCurrentUser, currentUserObj, currentUserRef, contextError])
+  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError }), [currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError])
   
   return (
     <CurrentUserContext.Provider value={value}>
