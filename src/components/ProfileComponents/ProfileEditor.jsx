@@ -3,6 +3,7 @@ import { useState } from 'react'
 //Firebase imports 
 import { updateDoc } from 'firebase/firestore'
 import { updateProfile } from 'firebase/auth'
+import {}
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
@@ -12,14 +13,20 @@ export default function ProfileEditor() {
   const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef } = useCurrentUser()
 
   //State Variables
+  const [pfp, setPfp] = useState(null)
   const [username, setUsername] = useState(currentUserObj.username)
   const [bio, setBio] = useState(currentUserObj.bio)
-  const [email, setEmail] = useState(currentUser.email)
   const [error, setError] = useState(null)
   
   //Functions
-  const updatePfp = () => {
-    console.log("EEEE")  
+  const promptFile = () => {
+    document.getElementById("fileInput").click()
+  }
+
+  const updatePfp = (e) => {
+    const file = e.target.files[0]
+    setPfp(file)
+    
   }
 
   const updateUsername = async (e) => {
@@ -53,7 +60,6 @@ export default function ProfileEditor() {
 
   const updateEmail = (e) => {
     e.preventDefault()
-    console.log(email)
   }
 
   const updatePassword = (e) => {
@@ -72,9 +78,16 @@ export default function ProfileEditor() {
       <div className="flex flex-col text-white bg-black items-center rounded-xl">
         <h1 className="text-5xl font-bold underline mt-2">Profile</h1>
         <div className="flex mt-2 items-center w-4/6 justify-evenly">
-          <img onClick={updatePfp}
+          <img onClick={promptFile}
+            className="cursor-pointer transition-opacity duration-300 hover:opacity-75"
             src={currentUser.photoURL} width="200px" height="200px">
           </img>
+          <input onChange={updatePfp}
+            className="hidden"
+            type="file"
+            accept="image/*"
+            id="fileInput">
+          </input>
           <form className="flex flex-col" onSubmit={updateUsername}>
             <div className="flex items-center">
               <input 
