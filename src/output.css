@@ -679,6 +679,10 @@ video {
   border-radius: 0.75rem;
 }
 
+.rounded-full {
+  border-radius: 9999px;
+}
+
 .border-2 {
   border-width: 2px;
 }
@@ -750,6 +754,11 @@ video {
 
 .to-slate-500 {
   --tw-gradient-to: #64748b var(--tw-gradient-to-position);
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .p-1 {
@@ -849,10 +858,6 @@ video {
 .hover\:bg-green-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-}
-
-.hover\:opacity-50:hover {
-  opacity: 0.5;
 }
 
 .hover\:opacity-75:hover {
