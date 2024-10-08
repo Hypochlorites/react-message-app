@@ -7,6 +7,8 @@ import { storage } from '../../../.firebaseConfig'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
+//Component imports
+import EmailUpdater from './EmailUpdater'
 
 
 export default function ProfileEditor() {  
@@ -16,6 +18,7 @@ export default function ProfileEditor() {
   //State Variables
   const [username, setUsername] = useState(currentUserObj.username)
   const [bio, setBio] = useState(currentUserObj.bio)
+  const [updateEmail, setUpdateEmail] = useState(false)
   const [error, setError] = useState(null)
   
   //Functions
@@ -65,10 +68,6 @@ export default function ProfileEditor() {
     }
   }
 
-  const updateEmail = (e) => {
-    e.preventDefault()
-  }
-
   const updatePassword = (e) => {
     e.preventDefault()
   }
@@ -83,6 +82,7 @@ export default function ProfileEditor() {
     <div className="flex flex-col flex-grow bg-gray-300 justify-evenly">
       {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
       <div className="flex flex-col text-white bg-black items-center rounded-xl">
+        {updateEmail && <EmailUpdater setUpdateEmail={setUpdateEmail}/>}
         <h1 className="text-5xl font-bold underline mt-2">Profile</h1>
         <div className="flex mt-2 items-center w-4/6 justify-evenly">
           <img onClick={promptFile}
@@ -128,7 +128,7 @@ export default function ProfileEditor() {
         <h1 className="text-5xl font-bold underline mt-2">Authentication</h1>
         <div className="flex items-baseline">
           <p className="text-3xl font-semibold mt-4">{currentUser.email}</p>
-          <button onClick={updateEmail} className="bg-gray-500 rounded-lg border-2 border-white ml-2 p-1 hover:bg-green-200"> Change Email </button>
+          <button onClick={() => setUpdateEmail(true)} className="bg-gray-500 rounded-lg border-2 border-white ml-2 p-1 hover:bg-green-200"> Change Email </button>
         </div>          
           <button onClick={updatePassword} className="bg-gray-500 rounded-lg border-2 border-white ml-2 p-1 hover:bg-green-200 mt-2 mb-4"> Change Password </button>
       </div>
