@@ -1,6 +1,6 @@
 //React imports 
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 //Firebase imports 
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../.firebaseConfig'
@@ -10,6 +10,8 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 export default function SignInPage() {
   //Setup
   const navigate = useNavigate()
+  const location = useLocation()
+  const message = location.state?.message
   const { currentUser } = useCurrentUser()
 
   //State Variables
@@ -20,6 +22,7 @@ export default function SignInPage() {
   //Functions   
   const signIn = async (e) => {
     e.preventDefault()
+    console.log('in sign in')
     try {
       await signInWithEmailAndPassword(auth, email, password)
     } catch (e) {
@@ -34,7 +37,7 @@ export default function SignInPage() {
 
   //useEffects
   useEffect(() => {
-    if (currentUser !== null) {
+    if (currentUser !== null && !message) {
       navigate("/")
     }
   }, [currentUser])
@@ -45,6 +48,7 @@ export default function SignInPage() {
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold underline"> Sign In </h1>
       <form onSubmit={signIn} className="flex flex-col items-center"> 
+        {message && <p className="text-red-600 p-1">{message}</p> } 
         {error && <p className="text-red-600 p-1">{error}</p> }
         <div className="p-2 flex flex-col">
           <label htmlFor="email">Email</label>

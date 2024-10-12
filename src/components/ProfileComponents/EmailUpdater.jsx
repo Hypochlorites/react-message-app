@@ -1,22 +1,24 @@
 //React imports
 import {useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 //Firebase imports
 import { updateDoc } from 'firebase/firestore'
-import { updateEmail } from 'firebase/auth'
+import { updateEmail, AuthErrorCodes } from 'firebase/auth'
 //Context imports
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 
-export default function EmailUpdater(setUpdateEmail) {
+export default function EmailUpdater({ setUpdateEmail }) {
   //Setup   
   const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef } = useCurrentUser()
+  const navigate = useNavigate()
 
   //State Variables 
   const [email, setEmail] = useState("")
   const [error, setError] = useState(null)
 
   //Functions
-  const updateEmail = async (e) => {
+  const handleUpdateEmail = async (e) => {
     e.preventDefault()
     try {
       await updateEmail(currentUser, email)
@@ -26,15 +28,19 @@ export default function EmailUpdater(setUpdateEmail) {
       setUpdateEmail(false)
     } catch (e) {
         switch (e.code) {
-            case AuthErrorCodes.EMAIL_EXISTS:
-              setError("Email address is already in use.")
-              break
-            case AuthErrorCodes.INVALID_EMAIL:
-              setError("Invalid email.")
-              break
-            default:
-              setError(`Error updating email: ${e}`)
-              console.error("Error in updateEmail:", e, e.message)
+          case AuthErrorCodes.CREDENTIAL_TOO_OLD_LOGIN_AGAIN:
+            navigate('/signin', {
+              state: { message: 'Relogin to change your email address.'}
+            })
+          case AuthErrorCodes.EMAIL_EXISTS:
+            setError("Email address is already in use.")
+            break
+          case AuthErrorCodes.INVALID_EMAIL:
+            setError("Invalid email.")
+            break
+          default:
+            setError(`Error updating email: ${e}`)
+            console.error("Error in updateEmail:", e, e.message)
         }
     }
   }
@@ -46,10 +52,10 @@ export default function EmailUpdater(setUpdateEmail) {
   //HTML
   return (
     <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <form className="flex flex-col bg-gray-200 rounded-lg" onSubmit={updateEmail}>
+        <form onSubmit={handleUpdateEmail} className="flex flex-col bg-gray-200 border-2 rounded-lg">
             <div className="flex items-center">
                 <input
-                 className="font-semibold text-8xl bg-gray-400 rounded-lg text-center"
+                 className="font-semibold text-8xl bg-gray-400 text-center border-2 rounded-lg"
                  type="text"
                  name="email"
                  onChange={(e) => { setEmail(e.target.value) }} >
@@ -57,11 +63,11 @@ export default function EmailUpdater(setUpdateEmail) {
                 <button className="bg-gray-500 rounded-lg border-2 border-black ml-2 w-16 hover:bg-green-200" type="submit"> 
                     Set Email    
                 </button>
-                <button onClick={handleClick} className="bg-gray-500 rounded-lg border-2 border-black ml-2 mr-2 w-16 hover:bg-red-400">
+                <button onClick={handleClick} className="bg-gray-500 border-2 rounded-lg border-black ml-2 mr-2 w-16 hover:bg-red-400" type="button">
                     Cancel
                 </button>
             </div>
-            {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
+            {error && <p className="text-red-600 bg-gray-200 text-center p-1">{error}</p> }
         </form>
     </div>
   )

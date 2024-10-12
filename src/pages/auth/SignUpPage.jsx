@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 //Firebase imports 
 import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore'
 import { auth, db } from '../../../.firebaseConfig'
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword, updateProfile, AuthErrorCodes } from 'firebase/auth'
 //Context imports
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
