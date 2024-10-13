@@ -40,7 +40,7 @@ export default function EmailUpdater({ setUpdateEmail }) {
             break
           default:
             setError(`Error updating email: ${e}`)
-            console.error("Error in updateEmail:", e, e.message)
+            console.error("Error in handleEpdateEmail:", e, e.message)
         }
     }
   }
@@ -49,16 +49,19 @@ export default function EmailUpdater({ setUpdateEmail }) {
     setUpdateEmail(false)
   }
 
+  
   //HTML
   return (
     <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
         <form onSubmit={handleUpdateEmail} className="flex flex-col bg-gray-200 border-2 rounded-lg">
             <div className="flex items-center">
                 <input
-                 className="font-semibold text-8xl bg-gray-400 text-center border-2 rounded-lg"
-                 type="text"
-                 name="email"
-                 onChange={(e) => { setEmail(e.target.value) }} >
+                  className="font-semibold text-8xl bg-gray-400 text-center border-2 rounded-lg"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  required
+                  onChange={(e) => { setEmail(e.target.value) }} >
                 </input>
                 <button className="bg-gray-500 rounded-lg border-2 border-black ml-2 w-16 hover:bg-green-200" type="submit"> 
                     Set Email    

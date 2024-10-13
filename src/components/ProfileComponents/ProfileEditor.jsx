@@ -2,8 +2,8 @@
 import { useState } from 'react'
 //Firebase imports 
 import { updateDoc } from 'firebase/firestore'
-import { updateProfile } from 'firebase/auth'
-import { storage } from '../../../.firebaseConfig'
+import { updateProfile, sendPasswordResetEmail } from 'firebase/auth'
+import { storage, auth } from '../../../.firebaseConfig'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
@@ -19,6 +19,7 @@ export default function ProfileEditor() {
   const [username, setUsername] = useState(currentUserObj.username)
   const [bio, setBio] = useState(currentUserObj.bio)
   const [updateEmail, setUpdateEmail] = useState(false)
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false)
   const [error, setError] = useState(null)
   
   //Functions
@@ -68,9 +69,20 @@ export default function ProfileEditor() {
     }
   }
 
-  const updatePassword = (e) => {
+  const promptPasswordUpdate = async (e) => {
     e.preventDefault()
+    try {
+      await sendPasswordResetEmail(auth, currentUser.email)
+      setShowPasswordPopup(true)
+      setTimeout(() => {
+        setShowPasswordPopup(false)
+      }, 3000)
+    } catch (e) {
+      setError(`Error updating password: ${e}`)
+      console.error("Error in promptPasswordUpdate in ProfileEditor:", e, e.meesage)
+    }
   }
+
 
   //HTML
   if (currentUserObj === null) {
@@ -80,7 +92,7 @@ export default function ProfileEditor() {
   }
   return (
     <div className="flex flex-col flex-grow bg-gray-300 justify-evenly">
-      {error && <p className="text-red-600 bg-gray-100 p-1">{error}</p> }
+      {error && <p className="text-red-600 bg-gray-300 p-1">{error}</p> }
       <div className="flex flex-col text-white bg-black items-center rounded-xl">
         {updateEmail && <EmailUpdater setUpdateEmail={setUpdateEmail}/>}
         <h1 className="text-5xl font-bold underline mt-2">Profile</h1>
@@ -130,7 +142,8 @@ export default function ProfileEditor() {
           <p className="text-3xl font-semibold mt-4">{currentUser.email}</p>
           <button onClick={() => setUpdateEmail(true)} className="bg-gray-500 rounded-lg border-2 border-white ml-2 p-1 hover:bg-green-200"> Change Email </button>
         </div>          
-          <button onClick={updatePassword} className="bg-gray-500 rounded-lg border-2 border-white ml-2 p-1 hover:bg-green-200 mt-2 mb-4"> Change Password </button>
+          <button onClick={promptPasswordUpdate} className="bg-gray-500 rounded-lg border-2 border-white ml-2 p-1 hover:bg-green-200 mt-2 mb-4"> Change Password </button>
+          {showPasswordPopup && <p className="bg-green-300 rounded-lg mb-4 p-2"> A password reset link has been emailed to you </p> } 
       </div>
     </div>
   )

@@ -22,7 +22,6 @@ export default function SignInPage() {
   //Functions   
   const signIn = async (e) => {
     e.preventDefault()
-    console.log('in sign in')
     try {
       await signInWithEmailAndPassword(auth, email, password)
     } catch (e) {
