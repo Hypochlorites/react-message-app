@@ -34,6 +34,7 @@ export default function ProfileEditor() {
       await uploadBytes(fileRef, file)
       const profileUrl = await getDownloadURL(fileRef)
       await updateProfile(currentUser, {photoURL: profileUrl})
+      await updateDoc(currentUserRef, {photoURL: profileUrl})
     } catch (e) {
       setError(`Error updating profile picture: ${e}`)
       console.error("Error in updatePfp: ", e, e.message)

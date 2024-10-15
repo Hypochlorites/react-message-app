@@ -14,7 +14,8 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
   const { currentUser } = useCurrentUser()
 
   //State Variables 
-  const [username, setUsername] = useState(null)
+  const [otherUserPhoto, setOtherUserPhoto] = useState(null)
+  const [otherUsername, setOtherUsername] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
@@ -75,7 +76,9 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
       const userRef = doc(db, "users", user_id)
       const userSnap = await getDoc(userRef)
       const userObj = userSnap.data()
-      setUsername(userObj.username)
+      setOtherUserPhoto(userObj.photoURL)
+      setOtherUsername(userObj.username)
+      console.log(otherUserPhoto)
     } catch (e) {
       setError(`Error getting other user's username: ${e}`)
       console.error("Error in getUsername", e, e.message)
@@ -121,8 +124,10 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
                     message={message.message}
                     isIncoming={message.from !== currentUser.uid}
                     timestamp={formatDate(message.timeStamp)}
-                    otherUser={username}
+                    otherUserPhoto={otherUserPhoto}
+                    otherUsername={otherUsername}
                     user={currentUser.displayName}
+                    userPhoto={currentUser.photoURL}
                   />
                 </li>
               ))}
