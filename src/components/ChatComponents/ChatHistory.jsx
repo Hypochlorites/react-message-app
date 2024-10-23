@@ -14,8 +14,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
   const { currentUser } = useCurrentUser()
 
   //State Variables 
-  const [otherUserPhoto, setOtherUserPhoto] = useState(null)
-  const [otherUsername, setOtherUsername] = useState(null)
+  const [otherUser, setOtherUser] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
@@ -70,18 +69,16 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
     }
   }
 
-  const getUsername = async (dialogue) => {
+  const getOtherUser = async (dialogue) => {
     try {
       const user_id = (dialogue.user1 === currentUser.uid) ? dialogue.user2 : dialogue.user1
       const userRef = doc(db, "users", user_id)
       const userSnap = await getDoc(userRef)
       const userObj = userSnap.data()
-      setOtherUserPhoto(userObj.photoURL)
-      setOtherUsername(userObj.username)
-      console.log(otherUserPhoto)
+      setOtherUser(userObj)
     } catch (e) {
-      setError(`Error getting other user's username: ${e}`)
-      console.error("Error in getUsername", e, e.message)
+      setError(`Error getting other user's data: ${e}`)
+      console.error("Error in getOtherUser in ChatHistory", e, e.message)
     }
   }
   
@@ -93,7 +90,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
         const dialogueSnap = await getDoc(dialogueRef)
         const dialogue = dialogueSnap.data()
         await getMessages(dialogueRef) 
-        await getUsername(dialogue)
+        await getOtherUser(dialogue)
       } catch (e) {
         setError(`Error fecthing dialogues: ${e}`)
         console.error("Error is fetchData:", e, e.message)
@@ -114,7 +111,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
         <p className="text-red-600 p-1">{error}</p>
       ) : (
         <div>
-          {messages === null ? (
+          {(messages === null || otherUser === null) ? (
             <p className="p-1"> Loading... </p>
           ): (
             <ul>
@@ -124,10 +121,8 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
                     message={message.message}
                     isIncoming={message.from !== currentUser.uid}
                     timestamp={formatDate(message.timeStamp)}
-                    otherUserPhoto={otherUserPhoto}
-                    otherUsername={otherUsername}
-                    user={currentUser.displayName}
-                    userPhoto={currentUser.photoURL}
+                    otherUser={otherUser}
+                    currentUser={currentUser}
                   />
                 </li>
               ))}
