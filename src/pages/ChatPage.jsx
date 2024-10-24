@@ -74,18 +74,21 @@ export default function ChatPage() {
   
   useEffect(() => {
     try {
-      const dialoguesRef = collection(db, "dialogues");
-      const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
-      const unsubscribeDialogues = onSnapshot(q, (snapshot) => {
-        const dialogues = snapshot.docs.map(doc => ({ ...doc.data() }));
-        setDialogues(dialogues)
-      })
-      return () => unsubscribeDialogues()                                  
+      if (currentUser) {
+        const dialoguesRef = collection(db, "dialogues");
+        const q = query(dialoguesRef, or(where("user1", "==", currentUser.uid), where("user2", "==", currentUser.uid)))
+        const unsubscribeDialogues = onSnapshot(q, (snapshot) => {
+          const dialogues = snapshot.docs.map(doc => ({ ...doc.data() }));
+          setDialogues(dialogues)
+        })
+        return () => unsubscribeDialogues()            
+      }
+                             
     } catch (e) {
       setError(`Error getting dialogues: ${e}`)
       console.error("Error in getDialogues useEffect:", e, e.message)
     }
-  }, [])
+  }, [currentUser])
   
 
   //HTML
