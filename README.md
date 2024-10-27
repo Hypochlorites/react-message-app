@@ -7,8 +7,6 @@ Updated version of an old project that I used to learn react. This project aims 
 Connected to a firebase database for authentication, and the storage of users, dialogues, and messages. Various state variables are alongside conditional rendering used to have the website affected by these database elements. Extensive use of react's useEffect hook for the ChatPage and ProfilePage, and occasional use of react's useMemo hook to optimize certain processes. Use of error handling for the majority of functions. ChatPage allows the creation of dialogues and sending of messages to other users using a mix of react state variables and the firebase database. ProfilePage uses firebase's authentication functions to allow users to change their username, profile picture, password, and email. 
 
 ## Todo:
-  * Improve display of messages.
-    * profile bar
   * Update homepage
   * styling
   * Revamp userlist
