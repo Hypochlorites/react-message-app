@@ -110,23 +110,29 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
       { error ? (
         <p className="text-red-600 p-1">{error}</p>
       ) : (
-        <div>
-          {(messages === null || otherUser === null) ? (
-            <p className="p-1"> Loading... </p>
-          ): (
-            <ul>
-              {messages.map((message, id) => (
-                <li key={id}>
-                  <Message 
-                    message={message.message}
-                    isIncoming={message.from !== currentUser.uid}
-                    timestamp={formatDate(message.timeStamp)}
-                    otherUser={otherUser}
-                    currentUser={currentUser}
-                  />
-                </li>
-              ))}
-            </ul> 
+        <div> 
+          {(otherUser === null) ? (
+            <p className="p-1 text-8xl text-center"> Select a user to chat with. </p>
+          ) : (
+            <div>
+              {(messages === null) ? (
+                <p className="p-1"> Loading... </p>
+              ): (
+                <ul>
+                  {messages.map((message, id) => (
+                    <li key={id}>
+                      <Message 
+                        message={message.message}
+                        isIncoming={message.from !== currentUser.uid}
+                        timestamp={formatDate(message.timeStamp)}
+                        otherUser={otherUser}
+                        currentUser={currentUser}
+                      />
+                    </li>
+                  ))}
+                </ul> 
+              )}
+            </div>
           )}
         </div>
       )}
