@@ -112,7 +112,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
       ) : (
         <div> 
           {(otherUser === null) ? (
-            <p className="p-1 text-8xl text-center"> Select a user to chat with. </p>
+            <p className="p-1 text-8xl text-center"> Select a user to chat with</p>
           ) : (
             <div>
               {(messages === null) ? (
