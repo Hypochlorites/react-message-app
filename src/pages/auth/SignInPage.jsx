@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 //Firebase imports 
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import { auth } from '../../../.firebaseConfig'
 //Context imports
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
@@ -12,7 +12,7 @@ export default function SignInPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const message = location.state?.message
-  const { currentUser } = useCurrentUser()
+  const { currentUser, setCurrentUser } = useCurrentUser()
 
   //State Variables
   const [email, setEmail] = useState("")
@@ -23,7 +23,14 @@ export default function SignInPage() {
   const signIn = async (e) => {
     e.preventDefault()
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      if (message) {
+        const user = userCredential.user
+        const credential = EmailAuthProvider.credential(email, password)
+        await reauthenticateWithCredential(user, credential)
+        setCurrentUser(user)
+        navigate("/profile")
+      }
     } catch (e) {
       if (e.code === "auth/invalid-credential") {
         setError("Incorrect email or password.")
