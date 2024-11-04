@@ -86,7 +86,7 @@ export default function ChatPage() {
                              
     } catch (e) {
       setError(`Error getting dialogues: ${e}`)
-      console.error("Error in getDialogues useEffect:", e, e.message)
+      console.error("Error in getDialogues useEffect in ChatPage:", e, e.message)
     }
   }, [currentUser])
   

@@ -10,7 +10,7 @@ import { doc, getDoc } from 'firebase/firestore'
 const CurrentUserContext = createContext()
 
 export const CurrentUserProvider = ({ children }) => {
-  //StateVariables
+  //State Variables
   const [currentUser, setCurrentUser] = useState(null)
   const [currentUserObj, setCurrentUserObj] = useState(null)
   const [currentUserRef, setCurrentUserRef] = useState(null)

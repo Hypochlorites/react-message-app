@@ -72,7 +72,7 @@ export default function SignUpPage() {
   //useEffects
   useEffect(() => {
     if (currentUser !== null) {
-      navigate("/signin")
+      navigate("/")
     }
   }, [currentUser])
 
