@@ -56,7 +56,7 @@ export default function ChatPage() {
       await updateDoc(dialogueRef, {
         lastMessage: toSend
       })
-      setMessages([...messages, messageData])
+      setMessages(prevMessages => [...prevMessages, messageData])
     } catch (e) {
       setError(`Error sending message: ${e}`)
       console.error("Error in sendMessage:", e, e.message)

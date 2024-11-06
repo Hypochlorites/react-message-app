@@ -7,10 +7,10 @@ export default function MessageInput({ sendMessage }) {
   const [toSend, setToSend] = useState("")
   
   //Functions 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (toSend.length > 0) {
-      sendMessage(toSend)
+      await sendMessage(toSend)
     }
     setToSend("")
   }

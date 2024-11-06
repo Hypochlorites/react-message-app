@@ -39,10 +39,11 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
         minute: 'numeric', 
         hour12: true 
       }
-      if (dateCheck(date) == "today") {
+      const dateTest = dateCheck(date)
+      if (dateTest == "today") {
         return "Today at " + date.toLocaleTimeString('en-US', optionsTime)
       }
-      if (dateCheck(date) == "yesterday") {
+      if (dateTest == "yesterday") {
         return "Yesterday at " + date.toLocaleTimeString('en-US', optionsTime)
       }
       const optionsDate = { 

@@ -86,11 +86,6 @@ export default function ProfileEditor() {
 
 
   //HTML
-  if (currentUserObj === null) {
-    return (
-      <p className="text-center"> Loading... </p>
-    )
-  }
   return (
     <div className="flex flex-col flex-grow bg-gray-300 justify-evenly">
       {error && <p className="text-red-600 bg-gray-300 p-1">{error}</p> }
