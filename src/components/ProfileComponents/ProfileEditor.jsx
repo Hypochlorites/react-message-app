@@ -13,7 +13,7 @@ import EmailUpdater from './EmailUpdater'
 
 export default function ProfileEditor() {  
   //Setup
-  const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef } = useCurrentUser()
+  const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef, refreshUser } = useCurrentUser()
 
   //State Variables
   const [username, setUsername] = useState(currentUserObj.username)
@@ -35,6 +35,7 @@ export default function ProfileEditor() {
       const profileUrl = await getDownloadURL(fileRef)
       await updateProfile(currentUser, {photoURL: profileUrl})
       await updateDoc(currentUserRef, {photoURL: profileUrl})
+      await refreshUser()
     } catch (e) {
       setError(`Error updating profile picture: ${e}`)
       console.error("Error in updatePfp: ", e, e.message)
@@ -45,10 +46,12 @@ export default function ProfileEditor() {
     e.preventDefault()
     try {
       if (username.length <= 15) {
+        console.log(currentUser)
         await updateProfile(currentUser, {displayName: username})
         await updateDoc(currentUserRef, {username: username})
-        const updatedCurrentUserObj = { ...currentUserObj, username: username}
-        setCurrentUserObj(updatedCurrentUserObj)        
+        await refreshUser()
+        // const updatedCurrentUserObj = { ...currentUserObj, username: username}
+        // setCurrentUserObj(updatedCurrentUserObj)        
       }
     } catch (e) {
       setError(`Error updating username: ${e}`)
@@ -61,8 +64,9 @@ export default function ProfileEditor() {
     try {
       if (bio.length <= 500) {
         await updateDoc(currentUserRef, {bio: bio})
-        const updatedCurrentUserObj = { ...currentUserObj, bio: bio}
-        setCurrentUserObj(updatedCurrentUserObj)
+        await refreshUser()
+        // const updatedCurrentUserObj = { ...currentUserObj, bio: bio}
+        // setCurrentUserObj(updatedCurrentUserObj)
       }
     } catch (e) {
       setError(`Error updating bio: ${e}`)

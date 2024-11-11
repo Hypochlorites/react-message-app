@@ -30,6 +30,22 @@ export const CurrentUserProvider = ({ children }) => {
     }
   }
 
+  const refreshUser = async () => {
+    try {
+      const user = auth.currentUser 
+      console.log(user)
+      if (user) {
+        await user.reload()
+        setCurrentUser({ ...user })
+        await getUserObj(user.uid)
+      }  
+    } catch (e) {
+      setContextError(`Error refreshing user: ${e}`)
+      console.error("Error in refreshUser", e, e.message)
+    }
+    
+  }
+
   //useEffects
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -45,7 +61,7 @@ export const CurrentUserProvider = ({ children }) => {
     return () => unsubscribe()
   }, [])
 
-  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError }), [currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError])
+  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError, refreshUser }), [currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError])
   
   return (
     <CurrentUserContext.Provider value={value}>
