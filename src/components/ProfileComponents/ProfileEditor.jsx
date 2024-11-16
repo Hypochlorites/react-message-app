@@ -13,7 +13,7 @@ import EmailUpdater from './EmailUpdater'
 
 export default function ProfileEditor() {  
   //Setup
-  const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef, refreshUser } = useCurrentUser()
+  const { currentUser, currentUserObj, currentUserRef, refreshUser } = useCurrentUser()
 
   //State Variables
   const [username, setUsername] = useState(currentUserObj.username)
@@ -46,12 +46,9 @@ export default function ProfileEditor() {
     e.preventDefault()
     try {
       if (username.length <= 15) {
-        console.log(currentUser)
         await updateProfile(currentUser, {displayName: username})
         await updateDoc(currentUserRef, {username: username})
-        await refreshUser()
-        // const updatedCurrentUserObj = { ...currentUserObj, username: username}
-        // setCurrentUserObj(updatedCurrentUserObj)        
+        await refreshUser()    
       }
     } catch (e) {
       setError(`Error updating username: ${e}`)
@@ -65,8 +62,6 @@ export default function ProfileEditor() {
       if (bio.length <= 500) {
         await updateDoc(currentUserRef, {bio: bio})
         await refreshUser()
-        // const updatedCurrentUserObj = { ...currentUserObj, bio: bio}
-        // setCurrentUserObj(updatedCurrentUserObj)
       }
     } catch (e) {
       setError(`Error updating bio: ${e}`)

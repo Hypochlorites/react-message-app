@@ -33,10 +33,9 @@ export const CurrentUserProvider = ({ children }) => {
   const refreshUser = async () => {
     try {
       const user = auth.currentUser 
-      console.log(user)
       if (user) {
         await user.reload()
-        setCurrentUser({ ...user })
+        setCurrentUser(user)
         await getUserObj(user.uid)
       }  
     } catch (e) {
@@ -61,7 +60,7 @@ export const CurrentUserProvider = ({ children }) => {
     return () => unsubscribe()
   }, [])
 
-  const value = useMemo(() => ({ currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError, refreshUser }), [currentUser, setCurrentUser, currentUserObj, setCurrentUserObj, currentUserRef, contextError])
+  const value = useMemo(() => ({ currentUser, currentUserObj, currentUserRef, contextError, refreshUser }), [currentUser, currentUserObj, currentUserRef, contextError])
   
   return (
     <CurrentUserContext.Provider value={value}>

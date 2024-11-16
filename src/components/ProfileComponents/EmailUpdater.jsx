@@ -10,7 +10,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 export default function EmailUpdater({ setUpdateEmail }) {
   //Setup   
-  const { currentUser, currentUserObj, setCurrentUserObj, currentUserRef } = useCurrentUser()
+  const { currentUser, refreshUser, currentUserRef } = useCurrentUser()
   const navigate = useNavigate()
 
   //State Variables 
@@ -23,8 +23,7 @@ export default function EmailUpdater({ setUpdateEmail }) {
     try {
       await updateEmail(currentUser, email)
       await updateDoc(currentUserRef, {email: email})
-      const updatedCurrentUserObj = { ...currentUserObj, email: email}
-      setCurrentUserObj(updatedCurrentUserObj)
+      await refreshUser()
       setUpdateEmail(false)
     } catch (e) {
         switch (e.code) {

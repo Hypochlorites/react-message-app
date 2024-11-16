@@ -12,7 +12,7 @@ export default function SignInPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const message = location.state?.message
-  const { currentUser, setCurrentUser } = useCurrentUser()
+  const { currentUser, refreshUser } = useCurrentUser()
 
   //State Variables
   const [email, setEmail] = useState("")
@@ -28,7 +28,7 @@ export default function SignInPage() {
         const user = userCredential.user
         const credential = EmailAuthProvider.credential(email, password)
         await reauthenticateWithCredential(user, credential)
-        setCurrentUser(user)
+        await refreshUser()
         navigate("/profile")
       }
     } catch (e) {
