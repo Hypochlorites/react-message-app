@@ -556,6 +556,10 @@ video {
   z-index: 50;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -596,6 +600,10 @@ video {
   height: 12rem;
 }
 
+.h-60 {
+  height: 15rem;
+}
+
 .h-full {
   height: 100%;
 }
@@ -606,10 +614,6 @@ video {
 
 .min-h-screen {
   min-height: 100vh;
-}
-
-.w-10\/12 {
-  width: 83.333333%;
 }
 
 .w-11\/12 {
