@@ -600,16 +600,16 @@ video {
   height: 12rem;
 }
 
-.h-60 {
-  height: 15rem;
-}
-
 .h-full {
   height: 100%;
 }
 
 .max-h-96 {
   max-height: 24rem;
+}
+
+.min-h-5 {
+  min-height: 1.25rem;
 }
 
 .min-h-screen {

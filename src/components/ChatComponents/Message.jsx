@@ -1,10 +1,12 @@
 //React imports
 import { useState, useRef} from 'react'
+//Firebase imports
+import { collection, addDoc } from 'firebase/firestore'
 //Component imports
 import ProfileBar from '../ProfileComponents/ProfileBar'
 
 
-export default function Message({message, isIncoming, timestamp, otherUser, currentUser}) {
+export default function Message({message, isIncoming, timestamp, otherUser, otherUserRef, currentUser}) {
   //Setup 
   const profileBarRefs = useRef({})
 
@@ -18,6 +20,20 @@ export default function Message({message, isIncoming, timestamp, otherUser, curr
     setProfileBarPosition({top: rect.top, right: rect.right})
     setShowProfileBar(true)
   }
+
+  const sendFriendRequest = async () => {
+    try {
+      const friendRequest = collection(otherUserRef, "friendRequests")
+      const friendRequestObj = {
+        from: currentUser.uid,
+      }
+      await addDoc(friendRequest, friendRequestObj)
+    } catch (e) {
+      setError(`Error sending friend request: ${e}`)
+      console.error("Error in sendFriendRequest", e, e.message)
+    }
+  }
+
 
   //HTML
   return (
@@ -41,6 +57,7 @@ export default function Message({message, isIncoming, timestamp, otherUser, curr
                       photoURL={otherUser.photoURL}
                       username={otherUser.username}
                       bio={otherUser.bio}
+                      sendFriendRequest={sendFriendRequest}
                     />}
       </div>
     </div>

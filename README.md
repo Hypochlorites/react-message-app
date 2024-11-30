@@ -11,6 +11,8 @@ Connected to a firebase database for authentication, and the storage of users, d
   * styling
   * Revamp userlist
   * groupchats
+  * sign in page error messages
+  * Button popups
 
 ## Firebase Architecture 
   * ### users

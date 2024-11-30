@@ -15,6 +15,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
 
   //State Variables 
   const [otherUser, setOtherUser] = useState(null)
+  const [otherUserRef, setOtherUserRef] = useState(null)
   const [error, setError] = useState(null)
 
   //Functions
@@ -76,6 +77,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
       const userRef = doc(db, "users", user_id)
       const userSnap = await getDoc(userRef)
       const userObj = userSnap.data()
+      setOtherUserRef(userRef)
       setOtherUser(userObj)
     } catch (e) {
       setError(`Error getting other user's data: ${e}`)
@@ -127,6 +129,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
                         isIncoming={message.from !== currentUser.uid}
                         timestamp={formatDate(message.timeStamp)}
                         otherUser={otherUser}
+                        otherUserRef={otherUserRef}
                         currentUser={currentUser}
                       />
                     </li>
