@@ -96,7 +96,7 @@ export default function ChatHistory({selectedDialogue, messages, setMessages}) {
         await getOtherUser(dialogue)
       } catch (e) {
         setError(`Error fecthing dialogues: ${e}`)
-        console.error("Error is fetchData:", e, e.message)
+        console.error("Error in fetchData:", e, e.message)
       }
     }
     if (selectedDialogue) {

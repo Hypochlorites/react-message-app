@@ -25,7 +25,8 @@ export default function Message({message, isIncoming, timestamp, otherUser, othe
     try {
       const friendRequest = collection(otherUserRef, "friendRequests")
       const friendRequestObj = {
-        from: currentUser.uid,
+        requesterUsername: currentUser.displayName,
+        requesterId: currentUser.uid
       }
       await addDoc(friendRequest, friendRequestObj)
     } catch (e) {

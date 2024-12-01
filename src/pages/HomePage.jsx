@@ -1,16 +1,22 @@
 //Context imports 
 import { useCurrentUser } from "./../contexts/CurrentUserContext"
+//Component imports
+import FriendRequestList from '../components/HomeComponents/FriendRequestList'
 
 
 export default function HomePage() {
   //Setup
   const { currentUser } = useCurrentUser()
-  
-  
+
+
   //HTML
   if (currentUser) {
     return (
-      <h1 className="font-bold"> Home </h1>
+      <div className="flex flex-grow">
+        <div className="basis-60">
+          <FriendRequestList/>
+        </div>
+      </div>
     )
   } else {
     return (
