@@ -8,7 +8,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
 export default function FriendRequestList() {
   //Setup
-  const { currentUser, currentUserRef } = useCurrentUser()
+  const { currentUserRef } = useCurrentUser()
   
   //State Variables
   const [friendRequests, setFriendRequests] = useState(null)
@@ -26,8 +26,10 @@ export default function FriendRequestList() {
         console.error("Error in getFriendRequests:", e, e.message)
       }
     }
-    getFriendRequests()
-  }, [currentUser])
+    if (currentUserRef) {
+      getFriendRequests()
+    }
+  }, [currentUserRef])
 
 
   //HTML
