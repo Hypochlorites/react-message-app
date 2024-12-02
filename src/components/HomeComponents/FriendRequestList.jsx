@@ -1,7 +1,7 @@
 //React imports
 import { useState, useEffect } from 'react'
 //Firebase imports
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, where, deleteDoc } from 'firebase/firestore'
 //Context imports 
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 
@@ -13,6 +13,19 @@ export default function FriendRequestList() {
   //State Variables
   const [friendRequests, setFriendRequests] = useState(null)
   const [error, setError] = useState(null)
+
+  //Functions
+  const rejectRequest = async (friendRequest) => {
+    try {
+      const friendRequestsRef = collection(currentUserRef, "friendRequests")
+      const q = query(friendRequestsRef, where("requesterId", "==", friendRequest.requesterId))
+      await deleteDoc(q)
+      setFriendRequests((prevFriendRequests) => prevFriendRequests.filter((request) => request.requesterId == friendRequest.requesterId))
+    } catch (e) {
+      setError(`Error rejecting request: ${e}`)
+      console.error("Error in rejectRequest: ", e, e.message)
+    }
+  }
 
   //useEffects 
   useEffect(() => {
@@ -45,9 +58,13 @@ export default function FriendRequestList() {
             ) : (
               <ul className="flex flex-col divide-y">
                 {friendRequests.map((friendRequest, id) => (
-                  <li key={id}>
-                    <div>
-                      <h1 className="text-lg font-bold"> {friendRequest.requesterUsername} </h1>
+                  <li className="p-1 " key={id}>
+                    <div className="flex flex-col items-center">
+                      <h1 className="text-lg font-semibold"> {friendRequest.requesterUsername} </h1>
+                      <div className="flex justify-evenly w-full">
+                        <button className="bg-gray-400 rounded-lg border-2 border-black hover:bg-green-200 p-1"> Accept </button>
+                        <button onClick={(friendRequest) => rejectRequest(friendRequest)}className="bg-gray-400 border-2 rounded-lg border-black hover:bg-red-400 p-1"> Reject </button>
+                      </div>
                     </div>
                   </li>
                 ))}
