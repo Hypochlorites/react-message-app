@@ -19,7 +19,9 @@ export default function FriendRequestList() {
     try {
       const friendRequestsRef = collection(currentUserRef, "friendRequests")
       const q = query(friendRequestsRef, where("requesterId", "==", friendRequest.requesterId))
-      await deleteDoc(q)
+      const querySnapshot = await getDocs(q)
+      const requestRef = querySnapshot.docs[0].ref
+      await deleteDoc(requestRef)
       setFriendRequests((prevFriendRequests) => prevFriendRequests.filter((request) => request.requesterId == friendRequest.requesterId))
     } catch (e) {
       setError(`Error rejecting request: ${e}`)
@@ -63,7 +65,7 @@ export default function FriendRequestList() {
                       <h1 className="text-lg font-semibold"> {friendRequest.requesterUsername} </h1>
                       <div className="flex justify-evenly w-full">
                         <button className="bg-gray-400 rounded-lg border-2 border-black hover:bg-green-200 p-1"> Accept </button>
-                        <button onClick={(friendRequest) => rejectRequest(friendRequest)}className="bg-gray-400 border-2 rounded-lg border-black hover:bg-red-400 p-1"> Reject </button>
+                        <button onClick={() => rejectRequest(friendRequest)}className="bg-gray-400 border-2 rounded-lg border-black hover:bg-red-400 p-1"> Reject </button>
                       </div>
                     </div>
                   </li>
