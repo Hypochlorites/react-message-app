@@ -22,7 +22,7 @@ export default function FriendRequestList() {
       const querySnapshot = await getDocs(q)
       const requestRef = querySnapshot.docs[0].ref
       await deleteDoc(requestRef)
-      setFriendRequests((prevFriendRequests) => prevFriendRequests.filter((request) => request.requesterId == friendRequest.requesterId))
+      setFriendRequests((prevFriendRequests) => prevFriendRequests.filter((request) => !(request.requesterId == friendRequest.requesterId)))
     } catch (e) {
       setError(`Error rejecting request: ${e}`)
       console.error("Error in rejectRequest: ", e, e.message)
