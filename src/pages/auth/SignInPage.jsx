@@ -32,7 +32,7 @@ export default function SignInPage() {
         navigate("/profile")
       }
     } catch (e) {
-      if (e.code === "auth/invalid-credential") {
+      if (e.code === "auth/wrong-password" || e.code === "auth/user-not-found") {
         setError("Incorrect email or password.")
         return 
       }
